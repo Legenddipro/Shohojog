@@ -1,0 +1,81 @@
+{
+    "first_name": "Alice",
+    "middle_name": "Grace",
+    "last_name": "Johnson",
+    "user_name": "alice_grace456",
+    "user_password": "StrongPassword789",
+    "contact_no": "+9876543210",
+    "e_mail": "alice.johnson@example.com",
+    "location_pst_code": "54321",
+    "user_type": "premium"
+  }
+  {
+    "first_name": "Bob",
+    "middle_name": "Robert",
+    "last_name": "Smith",
+    "user_name": "bob_smith123",
+    "user_password": "SecurePass456",
+    "contact_no": "+1234567890",
+    "e_mail": "bob.smith@example.com",
+    "location_pst_code": "12345",
+    "user_type": "client"
+  }
+  {
+    "first_name": "Eva",
+    "middle_name": "Marie",
+    "last_name": "Anderson",
+    "user_name": "eva_anderson789",
+    "user_password": "SuperSecret789",
+    "contact_no": "+9876543210",
+    "e_mail": "eva.anderson@example.com",
+    "location_pst_code": "12345",
+    "user_type": "member"
+  }
+  INSERT INTO public."location" (pst_code, street, area, town)
+VALUES ('12345', 'Main Street', 'Downtown', 'Cityville');
+INSERT INTO public."location" (pst_code, street, area, town)
+VALUES ('54321', 'Oak Avenue', 'Suburbia', 'Townsville');
+{
+  "first_name": "Jackie",
+  "middle_name": "Grace",
+  "last_name": "Johnson",
+  "user_name": "jackie_grace456",
+  "user_password": "StrongPass123",
+  "contact_no": "+9876543210",
+  "e_mail": "jackie.johnson@example.com",
+  "location_pst_code": "54321",
+  "user_type": "employee"
+}
+{
+  "first_name": "Sophia",
+  "middle_name": "Grace",
+  "last_name": "Taylor",
+  "user_name": "sophia_taylor789",
+  "user_password": "SecurePass123",
+  "contact_no": "+1234567890",
+  "e_mail": "sophia.taylor@example.com",
+  "location_pst_code": "12345",
+  "user_type": "customer"
+}
+{
+  "first_name": "Daniel",
+  "middle_name": "Joseph",
+  "last_name": "Williams",
+  "user_name": "daniel_williams456",
+  "user_password": "StrongPass789",
+  "contact_no": "+9876543210",
+  "e_mail": "daniel.williams@example.com",
+  "location_pst_code": "12345",
+  "user_type": "employee"
+}
+{
+  "first_name": "Alex",
+  "middle_name": "James",
+  "last_name": "Roberts",
+  "user_name": "alex_roberts123",
+  "user_password": "SecurePass456",
+  "contact_no": "+1234567890",
+  "e_mail": "alex.roberts@example.com",
+  "location_pst_code": "12345",
+  "user_type": "customer"
+}
