@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from 'react';
 import './Registration.css';
 import { Link } from 'react-router-dom';
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 
-const Registration = ({ setAuth }) => {
+const Registration = () => {
   const [formData, setFormData] = useState({
     first_name: '',
     middle_name: '',
@@ -14,11 +14,11 @@ const Registration = ({ setAuth }) => {
     e_mail: '',
     location_pst_code: '',
     user_type: '',
-    TIN: '', 
+    TIN: '',
     Website: '',
     factory_address: '',
     office_address: '',
-    salary: '', 
+    salary: '',
     employee_type: ''
   });
 
@@ -26,31 +26,29 @@ const Registration = ({ setAuth }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const body = { ...formData };
       const response = await fetch('http://localhost:5000/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(body)
+        body: JSON.stringify(formData)
       });
-      const parseRes = await response.json();
-      if (parseRes.jwtToken) {
-        localStorage.setItem("token", parseRes.jwtToken);
-        setAuth(true);
-        toast.success("Register Successfully");
+      const data = await response.json();
+      if (response.ok) {
+        toast.success(data.message); // Display success message from the backend
+        // Redirect to login page
+        window.location.href = '/login';
       } else {
-        setAuth(false);
-        toast.error(parseRes);
+        toast.error(data.error); // Display error message from the backend
       }
     } catch (error) {
       console.error('Error:', error);
     }
   };
+  
 
   const renderAdditionalFields = () => {
     if (formData.user_type === 'seller') {

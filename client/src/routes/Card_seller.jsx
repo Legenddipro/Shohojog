@@ -53,7 +53,7 @@ Card_seller.propTypes = {
   productName: PropTypes.string.isRequired,
   price: PropTypes.number.isRequired,
   category: PropTypes.string.isRequired,
-  status: PropTypes.string.isRequired
+  stock: PropTypes.number.isRequired
 };
 
 export default Card_seller;

@@ -33,7 +33,7 @@ router.post("/register", validInfo, async (req, res) => {
       e_mail,
     ]);
     if (user.rows.length !== 0) {
-      return res.status(401).send("User Already Exists");
+      return res.status(401).json({ error: "User Already Exists" });
     }
 
     // Bcrypt the user password
@@ -85,21 +85,20 @@ router.post("/register", validInfo, async (req, res) => {
       // Commit the transaction
       await client.query("COMMIT");
 
-      // Generate JWT token
-      const jwtToken = jwtGenerator(user_id);
-      return res.json({ jwtToken });
+      // Send a success message back to the client
+      return res.status(200).json({ message: "User registered successfully" });
     } catch (err) {
       // Rollback the transaction in case of any error
       await client.query("ROLLBACK");
       console.error(err.message);
-      res.status(500).send("Server Error");
+      return res.status(500).json({ error: "Server Error" });
     } finally {
       // Release the client back to the pool
       client.release();
     }
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server Error");
+    return res.status(500).json({ error: "Server Error" });
   }
 });
 
@@ -156,5 +155,8 @@ router.get("/is-verify", authorization, async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
+
+
+
 
 module.exports = router;

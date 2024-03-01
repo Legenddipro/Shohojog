@@ -1,33 +1,40 @@
-import React, { Fragment } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
-import All_products_Customer from './All_products_Customer'; // Import the All_Products_Customer component
+import React, { Fragment, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import All_products_Customer from './All_products_Customer';
+import Cart from './Cart'; // Import the Cart component
 
 const Home_Customer = ({ setAuth }) => {
-  const navigate = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate();
+  const [isCartOpen, setIsCartOpen] = useState(false); // State to track if the cart is open
+
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen); // Toggle the state of the cart
+  };
 
   const logout = (e) => {
     e.preventDefault();
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userType");
     setAuth(false);
-    navigate('/login'); // Navigate back to login page
+    navigate('/login');
   };
   
   return (
     <Fragment>
-      {/* Title Bar */}
       <div className="title-bar">
         <h1>Shohojog</h1>
         <div className="logout-option">
           <button onClick={(e) => logout(e)}>Log out</button>
         </div>
         <div className="options">
-          {/* Add links for messaging, my profile, and my cart */}
           <button onClick={() => navigate('/messaging')}>Messaging</button>
           <button onClick={() => navigate('/my_Profile')}>My Profile</button>
-          <button onClick={() => navigate('/my-cart')}>My Cart</button>
+          <button onClick={toggleCart}>My Cart</button> {/* Toggle cart visibility */}
         </div>
       </div>
-      <All_products_Customer />
+      {/* Conditionally render Cart component if isCartOpen is true */}
+      {isCartOpen ? <Cart /> : <All_products_Customer />}
     </Fragment>
   );
 };

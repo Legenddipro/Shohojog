@@ -112,7 +112,8 @@ CREATE TABLE Courier_Service (
 		CONSTRAINT fk_courier_employee FOREIGN KEY (service_id) REFERENCES Employee(employee_id)
 );
 Alter ADD_COLUMN Courier_Service (status VARCHAR(50));
-CREATE TABLE Order (
+
+CREATE TABLE "Order" (
     order_id SERIAL PRIMARY KEY,
     order_date DATE NOT NULL,
     isConfirm BOOLEAN NOT NULL,
@@ -120,10 +121,12 @@ CREATE TABLE Order (
 		payment_date DATE,
 		delivery_time TIMESTAMP,
 		customer_id uuid NOT NULL,
-    courier_employee_id uuid NOT NULL,-- Foreign key referencing Courier_Service		
+    courier_employee_id uuid ,-- Foreign key referencing Courier_Service		
      CONSTRAINT fk_courier_employee FOREIGN KEY (courier_employee_id) REFERENCES Courier_Service(service_id),
 		CONSTRAINT customer_order_fk FOREIGN KEY (customer_id) REFERENCES Customer (user_id)
 );
+
+
 
 CREATE TABLE Customer_Care (
    service_id uuid PRIMARY KEY,
@@ -155,19 +158,17 @@ CREATE TABLE Return_Order (
 
 
 CREATE TABLE Contains (
-    order_id SERIAL,
-    product_id SERIAL,
-		CONSTRAINT FK_CONTAINS_ORDER FOREIGN KEY (order_id) REFERENCES "Order"(
-	order_id),
-    CONSTRAINT FK_CONTAINS_PRODUCT FOREIGN KEY (product_id) REFERENCES   Product(product_id),
-		CONSTRAINT PK_CONTAINS PRIMARY KEY (order_id, product_id),
+    order_id INT,
+    product_id INT,
+    CONSTRAINT FK_CONTAINS_ORDER FOREIGN KEY (order_id) REFERENCES "Order" (order_id),
+    CONSTRAINT FK_CONTAINS_PRODUCT FOREIGN KEY (product_id) REFERENCES Product (product_id),
+    CONSTRAINT PK_CONTAINS PRIMARY KEY (order_id, product_id),
     quantity INT,
     price DECIMAL(10, 2),
-   
     CONSTRAINT NO_NEGATIVE_QUANTITY CHECK(quantity > 0),
-		CONSTRAINT NO_NEGATIVE_price CHECK(price >= 0)
-    				
+    CONSTRAINT NO_NEGATIVE_PRICE CHECK(price >= 0)
 );
+
 
 CREATE TABLE Review (
 customer_id uuid,

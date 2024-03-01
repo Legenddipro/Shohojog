@@ -1,110 +1,87 @@
-// Import necessary dependencies
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom'; // Import useHistory to navigate
-import '../styles/Cart.scss'; // Import CSS styles
+import './Cart.css'; // Importing CSS file
 
-// Define your Cart component
 const Cart = () => {
-    // Define state variables using useState hook
-    const [locations, setLocations] = useState([]);
-    const [users, setUsers] = useState([]);
-    const [products, setProducts] = useState([]);
-    const [orders, setOrders] = useState([]);
-    const [selectedLocation, setSelectedLocation] = useState('');
-    const [selectedProduct, setSelectedProduct] = useState('');
-    const [selectedUser, setSelectedUser] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState([]);
 
-    // Define a history object using useHistory hook
-    const history = useHistory();
+  useEffect(() => {
+    fetchCartProducts();
+  }, []);
 
-    // Define useEffect hook to fetch data from backend API
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Fetch data for locations
-                const locationsResponse = await fetch('http://localhost:3000/locations');
-                const locationsData = await locationsResponse.json();
-                setLocations(locationsData);
-
-                // Fetch data for users
-                const usersResponse = await fetch('http://localhost:3000/users');
-                const usersData = await usersResponse.json();
-                setUsers(usersData);
-
-                // Fetch data for products
-                const productsResponse = await fetch('http://localhost:3000/products');
-                const productsData = await productsResponse.json();
-                setProducts(productsData);
-
-                // Fetch data for orders
-                const ordersResponse = await fetch('http://localhost:3000/orders');
-                const ordersData = await ordersResponse.json();
-                setOrders(ordersData);
-
-                // Set isLoading to false once data is fetched
-                setIsLoading(false);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        // Call fetchData function
-        fetchData();
-    }, []);
-
-    // Function to handle form submission
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // Perform actions based on form data
-        // For example, navigate to a new page
-        history.push('/confirmation'); // Navigate to confirmation page
-    };
-
-    // Render loading message if data is still loading
-    if (isLoading) {
-        return <div>Loading...</div>;
+  const fetchCartProducts = async () => {
+    try {
+      // Fetch products from backend based on userId in localStorage
+      const userId = localStorage.getItem('userId');
+      const response = await fetch(`http://localhost:5000/customer/orders/${userId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
+      }
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
     }
+  };
 
-    // Render the form to select location, user, and product
-    return (
-        <div className="cart-container">
-            <h2>Place Order</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="location">Select Location:</label>
-                    <select id="location" value={selectedLocation} onChange={(e) => setSelectedLocation(e.target.value)}>
-                        {locations.map((location) => (
-                            <option key={location.pst_code} value={location.pst_code}>
-                                {location.street}, {location.area}, {location.town}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="user">Select User:</label>
-                    <select id="user" value={selectedUser} onChange={(e) => setSelectedUser(e.target.value)}>
-                        {users.map((user) => (
-                            <option key={user.user_id} value={user.user_id}>
-                                {user.First_Name} {user.Middle_Name} {user.Last_Name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="product">Select Product:</label>
-                    <select id="product" value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)}>
-                        {products.map((product) => (
-                            <option key={product.Product_id} value={product.Product_id}>
-                                {product.Product_name} - ${product.Price}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <button type="submit">Place Order</button>
-            </form>
+  const increaseQuantity = async (orderId, productId, oldQuantity) => {
+    try {
+      const newQuantity = oldQuantity + 1; // Increase quantity by 1
+      const response = await fetch('http://localhost:5000/customer/update_quantity', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ orderId, productId, newQuantity })
+      });
+      if (!response.ok) {
+        throw new Error('Failed to increase quantity');
+      }
+      fetchCartProducts(); // Fetch updated products after increasing quantity
+    } catch (error) {
+      console.error('Error increasing quantity:', error);
+    }
+  };  
+
+  const decreaseQuantity = async (orderId, productId, oldQuantity) => {
+    try {
+      const newQuantity = oldQuantity - 1; // Decrease quantity by 1
+      if (newQuantity < 1) return; // Ensure quantity doesn't become negative
+      const response = await fetch('http://localhost:5000/customer/update_quantity', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ orderId, productId, newQuantity })
+      });
+      if (!response.ok) {
+        throw new Error('Failed to decrease quantity');
+      }
+      fetchCartProducts(); // Fetch updated products after decreasing quantity
+    } catch (error) {
+      console.error('Error decreasing quantity:', error);
+    }
+  };
+
+  const goToReceiptPage = () => {
+    // Logic to navigate to the receipt page
+  };
+
+  return (
+    <div className="cart-container">
+      <h2>Cart</h2>
+      {products.map(product => (
+        <div className="card" key={`${product.order_id}-${product.product_id}`}>
+          <p>Name: {product.product_name}</p>
+          <p>Price: Tk {product.price}</p>
+          <p>Category: {product.product_category}</p>
+          <p>Quantity: {product.quantity}</p>
+          <button onClick={() => increaseQuantity(product.order_id, product.product_id, product.quantity)}>+</button>
+          <button onClick={() => decreaseQuantity(product.order_id, product.product_id, product.quantity)}>-</button>
         </div>
-    );
+      ))}
+      <button onClick={goToReceiptPage}>Confirm</button>
+    </div>
+  );
 };
 
 export default Cart;

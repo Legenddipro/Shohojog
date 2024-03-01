@@ -38,7 +38,7 @@ product_router.get("/seller_products/:id", async (req, res) => {
 // Route to update product status, price, and features
 product_router.put('/edit_product/:id', async (req, res) => {
   const productId = req.params.id;
-  const { price, product_features, status } = req.body;
+  const { price, product_features, stock } = req.body;
 
   try {
     const query = `
@@ -46,14 +46,14 @@ product_router.put('/edit_product/:id', async (req, res) => {
       SET 
         price = $1, 
         product_features = $2, 
-        status = $3 
+        stock = $3 
       WHERE product_id = $4
     `;
 
-    const values = [price, product_features, status, productId];
+    const values = [price, product_features, stock, productId];
     await pool.query(query, values);
 
-    res.status(200).json({ message: 'Product status, price, and features updated successfully' });
+    res.status(200).json({ message: 'Product stock, price, and features updated successfully' });
   } catch (error) {
     console.error('Error updating product:', error);
     res.status(500).json({ error: 'Internal Server Error' });
