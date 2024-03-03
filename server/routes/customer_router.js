@@ -207,5 +207,45 @@ customer_router.get("/get_cart_quantity", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+// Route to remove a product from the cart
+customer_router.post('/remove_from_cart', async (req, res) => {
+  try {
+    const { user_id, product_id } = req.body;
+
+    // Find the order_id where user_id is not confirmed (isConfirm = false)
+    const findOrderIdQuery = 'SELECT order_id FROM "Order" WHERE customer_id = $1 AND isConfirm = false';
+    const { rows } = await pool.query(findOrderIdQuery, [user_id]);
+
+    if (rows.length === 0) {
+      // If no unconfirmed order is found, send error response
+      return res.status(400).json({ error: 'Cart is Empty' });
+    }
+
+    const order_id = rows[0].order_id;
+
+    // Check if there are multiple entries of the same order_id in Contains table
+    const checkMultipleEntriesQuery = 'SELECT COUNT(*) AS count FROM Contains WHERE order_id = $1';
+    const countResult = await pool.query(checkMultipleEntriesQuery, [order_id]);
+
+    if (countResult.rows[0].count > 1) {
+      // If there are multiple entries, delete only the specified product from Contains table
+      const deleteProductQuery = 'DELETE FROM Contains WHERE order_id = $1 AND product_id = $2';
+      await pool.query(deleteProductQuery, [order_id, product_id]);
+    } else {
+      // If there's only one entry, delete both from Contains and Order table
+      const deleteContainsQuery = 'DELETE FROM Contains WHERE order_id = $1';
+      await pool.query(deleteContainsQuery, [order_id]);
+
+      const deleteOrderQuery = 'DELETE FROM "Order" WHERE order_id = $1';
+      await pool.query(deleteOrderQuery, [order_id]);
+    }
+
+    // Send success response
+    res.status(200).json({ message: 'Product removed from cart successfully' });
+  } catch (error) {
+    console.error('Error removing product from cart:', error);
+    res.status(500).json({ error: 'An unexpected error occurred' });
+  }
+});
 
 module.exports = customer_router;

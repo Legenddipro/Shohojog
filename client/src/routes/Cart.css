@@ -1,34 +1,75 @@
 /* Cart.css */
+
 .cart-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding: 20px;
-  }
-  
-  .card {
-    width: 250px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px;
-  }
-  
-  .card p {
-    margin: 5px 0;
-  }
-  
-  .card button {
-    margin-top: 10px;
-    padding: 5px 10px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .card button:hover {
-    background-color: #0056b3;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cart-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  backdrop-filter: blur(10px); /* Apply blur effect to the background */
+}
+
+.cart-content {
+  position: relative;
+  z-index: 1; /* Ensure content is above overlay */
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  max-height: 80%;
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.cart-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-info {
+  flex-grow: 1;
+}
+
+.product-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.product-price,
+.product-category,
+.product-quantity,
+.product-stock {
+  margin: 5px 0;
+}
+
+.quantity-buttons button {
+  padding: 8px 12px;
+  font-size: 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* Add more styles as needed */

@@ -1,0 +1,29 @@
+
+.title-bar {
+  background-color: #2ecc71; /* Green background color */
+  color: #fff; /* White text color */
+  padding: 20px; /* Padding around the title */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title-bar h1 {
+  margin: 0; /* Remove default margin */
+  font-size: 24px; /* Larger font size for the title */
+}
+
+.login-option a {
+  color: #fff; /* White text color for the login link */
+  text-decoration: none; /* Remove default underline */
+  font-size: 18px; /* Font size for the login link */
+  padding: 10px 20px; /* Padding around the login link */
+  border: 1px solid #fff; /* White border */
+  border-radius: 5px; /* Rounded corners */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+.login-option a:hover {
+  background-color: #fff; /* White background color on hover */
+  color: #2ecc71; /* Green text color on hover */
+}

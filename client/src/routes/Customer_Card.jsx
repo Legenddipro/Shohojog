@@ -21,7 +21,9 @@ const Customer_Card = ({ productId, productName, price, category, stock }) => {
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/customer/get_cart_quantity?user_id=${userId}&product_id=${productId}`);
+      const response = await fetch(
+        `http://localhost:5000/customer/get_cart_quantity?user_id=${userId}&product_id=${productId}`
+      );
       const data = await response.json();
       console.log(data); // Log the response from the server
       // Update the quantity state with the fetched value
@@ -47,16 +49,19 @@ const Customer_Card = ({ productId, productName, price, category, stock }) => {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/customer/add_to_cart", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: userId, // Use retrieved user ID
-          product_id: productId,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:5000/customer/add_to_cart",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId, // Use retrieved user ID
+            product_id: productId,
+          }),
+        }
+      );
       const data = await response.json();
       console.log(data); // Log the response from the server
       // Optionally, you can show a message or update the UI after successful addition to cart
@@ -70,7 +75,38 @@ const Customer_Card = ({ productId, productName, price, category, stock }) => {
       setIsAddingToCart(false); // Reset isAddingToCart if an error occurs
     }
   };
+  const handleRemoveFromCart = async () => {
+    setIsAddingToCart(true);
+    try {
+      // Retrieve user ID from local storage
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        // Handle case when user ID is not found in local storage
+        console.error("User ID not found in local storage");
+        return;
+      }
 
+      const response = await fetch("http://localhost:5000/customer/remove_from_cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userId, // Use retrieved user ID
+          product_id: productId,
+        }),
+      });
+      const data = await response.json();
+      console.log(data); // Log the response from the server
+      // Optionally, you can show a message or update the UI after successful removal from cart
+      setIsAddingToCart(false); // Reset isAddingToCart after successful removal from cart
+      setQuantity(0); // Set quantity to 0 after removing from cart
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle error, show error message, etc.
+      setIsAddingToCart(false); // Reset isAddingToCart if an error occurs
+    }
+  };
   // Render null until quantity is fetched
   if (quantity === null) {
     return null;
@@ -88,7 +124,7 @@ const Customer_Card = ({ productId, productName, price, category, stock }) => {
         {/* Product Price */}
         <p className="card__description">
           <strong>Price: </strong>
-          Tk {price} 
+          Tk {price}
         </p>
 
         {/* Product Category */}
@@ -107,25 +143,35 @@ const Customer_Card = ({ productId, productName, price, category, stock }) => {
       {/* Button Container */}
       <div className="card__button-container">
         {/* View Details Button */}
-        <Link to={`/product/${productId}`} className="card__btn card__btn--view-details">
+        <Link
+          to={`/product/${productId}`}
+          className="card__btn card__btn--view-details"
+        >
           View Details
         </Link>
 
         {/* Add to Cart Button or Added */}
         {quantity > 0 ? (
-          <button 
-            className="card__btn card__btn--added"
-            disabled={true}
-          >
+          <button className="card__btn card__btn--added" disabled={true}>
             Added
           </button>
         ) : (
-          <button 
+          <button
             className="card__btn card__btn--add-to-cart"
             onClick={handleAddToCart}
             disabled={isAddingToCart}
           >
-            {isAddingToCart ? 'Adding to Cart...' : 'Add to Cart'}
+            {isAddingToCart ? "Adding to Cart..." : "Add to Cart"}
+          </button>
+        )}
+        {/* Remove from Cart Button */}
+        {quantity > 0 && (
+          <button
+            className="card__btn card__btn--remove-from-cart"
+            onClick={handleRemoveFromCart}
+            disabled={isAddingToCart}
+          >
+            {isAddingToCart ? "Removing from Cart..." : "Remove from Cart"}
           </button>
         )}
       </div>

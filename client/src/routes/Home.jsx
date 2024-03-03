@@ -1,6 +1,9 @@
+// Home.jsx
+
 import React, { Fragment } from 'react';
 import AllProducts from './All_products'; // Import the AllProducts component
 import { Link } from 'react-router-dom'; // Import Link for routing
+import './Home.css'; // Import the CSS file for styling
 
 const Home = ({ setAuth }) => {
   return (
@@ -20,4 +23,5 @@ const Home = ({ setAuth }) => {
 };
 
 export default Home;
+
 

@@ -1,84 +1,61 @@
-/* .products-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .products-table th, .products-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-  
-  .products-table th {
-    background-color: #f2f2f2;
-    text-align: left;
-  }
-  
-  .products-table tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  
-  .products-table tbody tr:hover {
-    background-color: #ddd;
-  }
-   */
-   /* AllProducts.css */
+/* AllProducts.css */
 
 .products-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
-  
-  .card {
-    width: 250px;
-    border: 1px solid #ddd;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .card__body {
-    padding: 16px;
-  }
-  
-  .card__image {
-    width: 100%;
-    height: auto;
-    margin-bottom: 8px;
-  }
-  
-  .card__title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-  
-  .card__description {
-    font-size: 14px;
-    margin-bottom: 8px;
-  }
-  
-  .card__button-container {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 16px 16px 16px;
-  }
-  
-  .card__btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .card__btn--add-to-cart {
-    background-color: #007bff;
-    color: #fff;
-  }
-  
-  .card__btn--view-details {
-    background-color: #28a745;
-    color: #fff;
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 60px; /* Adjust margin-top to accommodate the fixed title bar */
+}
+
+.card {
+  width: 250px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card__body {
+  padding: 16px;
+}
+
+.card__image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 8px;
+}
+
+.card__title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.card__description {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.card__button-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px 16px 16px;
+}
+
+.card__btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.card__btn--add-to-cart {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.card__btn--view-details {
+  background-color: #28a745;
+  color: #fff;
+}

@@ -1,0 +1,55 @@
+/* Home_Customer.css */
+
+.title-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #2ecc71; /* Updated to a green color */
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff; /* Set text color to white */
+  }
+  
+  .title-section {
+    display: flex;
+    align-items: center;
+  }
+  
+  .title {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .options {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .option {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px 16px;
+    font-size: 16px;
+    color: #fff; /* Set text color to white */
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .option:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white on hover */
+  }
+  
+  .cart-option {
+    position: relative;
+  }
+  
+  .cart-icon {
+    margin-right: 8px;
+  }
+  

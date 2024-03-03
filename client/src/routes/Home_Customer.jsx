@@ -1,7 +1,10 @@
+// Home_Customer.jsx
+
 import React, { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import All_products_Customer from './All_products_Customer';
 import Cart from './Cart'; // Import the Cart component
+import './Home_Customer.css'; // Import the CSS file for styling
 
 const Home_Customer = ({ setAuth }) => {
   const navigate = useNavigate();
@@ -22,21 +25,28 @@ const Home_Customer = ({ setAuth }) => {
   
   return (
     <Fragment>
+      {/* Fixed title bar */}
       <div className="title-bar">
-        <h1>Shohojog</h1>
-        <div className="logout-option">
-          <button onClick={(e) => logout(e)}>Log out</button>
+        <div className="title-section">
+          <h1 className="title">Shohojog</h1> {/* Shohojog title */}
         </div>
         <div className="options">
-          <button onClick={() => navigate('/messaging')}>Messaging</button>
-          <button onClick={() => navigate('/my_Profile')}>My Profile</button>
-          <button onClick={toggleCart}>My Cart</button> {/* Toggle cart visibility */}
+          <button className="option" onClick={() => navigate('/messaging')}>Messaging</button>
+          <button className="option" onClick={() => navigate('/my_Profile')}>My Profile</button>
+          <button className="option cart-option" onClick={toggleCart}>
+            <span className="cart-icon">🛒</span> My Cart
+          </button> {/* Toggle cart visibility */}
+          <button className="option logout-option" onClick={(e) => logout(e)}>Log out</button>
         </div>
       </div>
-      {/* Conditionally render Cart component if isCartOpen is true */}
-      {isCartOpen ? <Cart /> : <All_products_Customer />}
+      <div className="content-container">
+        {/* Render All_products_Customer component */}
+        <All_products_Customer />
+        {/* Render Cart component conditionally if isCartOpen is true */}
+        {isCartOpen && <Cart />}
+      </div>
     </Fragment>
   );
 };
-
 export default Home_Customer;
+
