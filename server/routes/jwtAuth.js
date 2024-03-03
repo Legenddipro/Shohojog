@@ -34,14 +34,14 @@ router.post("/register", validInfo, async (req, res) => {
       area,
       town,
       user_type,
-      TIN, 
+      TIN,
       Website,
       factory_address,
       office_address,
-      salary, 
+      salary,
       employee_type,
       delivery_pst_code, // Added delivery_pst_code
-      vehicle_type 
+      vehicle_type,
     } = req.body;
 
     // Check if user exists
@@ -96,17 +96,15 @@ router.post("/register", validInfo, async (req, res) => {
           [user_id, TIN, Website, factory_address, office_address]
         );
       } else if (user_type === "customer") {
-        await client.query(
-          "INSERT INTO customer (user_id) VALUES ($1)",
-          [user_id]
-        );
-      }
-      else if (user_type === "employee") {
+        await client.query("INSERT INTO customer (user_id) VALUES ($1)", [
+          user_id,
+        ]);
+      } else if (user_type === "employee") {
         await client.query(
           "INSERT INTO employee (employee_id, salary, employee_type) VALUES ($1, $2, $3)",
           [user_id, salary, employee_type]
         );
-      } 
+      }
 
       // Insert additional info for courier service
       if (employee_type === "courier_service") {
@@ -141,7 +139,6 @@ router.post("/register", validInfo, async (req, res) => {
   }
 });
 
-
 //login route
 router.post("/login", validInfo, async (req, res) => {
   try {
@@ -175,14 +172,37 @@ router.post("/login", validInfo, async (req, res) => {
     // Extract the user type from the query result
     const userType = userTypeQuery.rows[0].user_type;
 
-    // Generate JWT token
+    // If user is an employee, fetch additional details from the employee table
+    if (userType === "employee") {
+      // Query the employee table to get additional employee details
+      const employeeDetailsQuery = await pool.query(
+        "SELECT employee_type FROM employee WHERE employee_id = $1",
+        [user.rows[0].user_id]
+      );
+
+      // Extract the employee type from the query result
+      const employeeType = employeeDetailsQuery.rows[0].employee_type;
+
+      // Generate JWT token
+      const jwtToken = jwtGenerator(user.rows[0].user_id);
+
+      // Return response with JWT token, user type, employee type, and user ID
+      return res.json({
+        jwtToken,
+        userType,
+        employeeType,
+        userId: user.rows[0].user_id,
+      });
+    }
+
+    // Generate JWT token for non-employee users
     const jwtToken = jwtGenerator(user.rows[0].user_id);
 
     // Return response with JWT token, user type, and user ID
     return res.json({ jwtToken, userType, userId: user.rows[0].user_id });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server Error");
+    res.status(500).json({ error: "Server Error" }); // Return JSON response with error message
   }
 });
 
@@ -195,8 +215,5 @@ router.get("/is-verify", authorization, async (req, res) => {
     res.status(500).send("Server Error");
   }
 });
-
-
-
 
 module.exports = router;

@@ -3,8 +3,8 @@
 import React, { Fragment, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import All_products_Customer from './All_products_Customer';
-import Cart from './Cart'; // Import the Cart component
-import './Home_Customer.css'; // Import the CSS file for styling
+import Cart from './Cart';
+import './Home_Customer.css'; 
 
 const Home_Customer = ({ setAuth }) => {
   const navigate = useNavigate();

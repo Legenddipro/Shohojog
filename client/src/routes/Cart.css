@@ -1,5 +1,14 @@
 /* Cart.css */
 
+.cart-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 0;
+  padding-top: 10px; /* Add some padding to the top */
+  border-bottom: 2px solid #007bff; /* Add a bottom border for the title bar */
+}
+
 .cart-container {
   position: fixed;
   top: 0;
@@ -72,4 +81,21 @@
   border-radius: 4px;
 }
 
+.confirm-button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background-color: #28a745; /* Change button color to green */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Add transition effect */
+}
+
+.confirm-button:hover {
+  background-color: #218838; /* Darker green on hover */
+}
 /* Add more styles as needed */

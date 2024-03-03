@@ -1,5 +1,3 @@
-// Cart.jsx
-
 import React, { useState, useEffect } from 'react';
 import './Cart.css'; // Importing CSS file
 
@@ -67,6 +65,7 @@ const Cart = () => {
       console.error('Error decreasing quantity:', error);
     }
   };
+
   const removeProductFromCart = async (orderId, productId) => {
     try {
       const response = await fetch('http://localhost:5000/customer/remove_from_cart', {
@@ -84,7 +83,6 @@ const Cart = () => {
       console.error('Error removing product from cart:', error);
     }
   };
-  
 
   const goToReceiptPage = () => {
     // Logic to navigate to the receipt page
@@ -94,7 +92,7 @@ const Cart = () => {
     <div className="cart-container">
       <div className="cart-overlay"></div> {/* Add overlay for blur effect */}
       <div className="cart-content">
-        <h2>Cart</h2>
+        <h1 className="cart-title">Shopping Cart</h1>
         <div className="cart-list">
           {products.map(product => (
             <div className="card" key={`${product.order_id}-${product.product_id}`}>
@@ -112,7 +110,7 @@ const Cart = () => {
             </div>
           ))}
         </div>
-        <button onClick={goToReceiptPage}>Confirm</button>
+        <button className="confirm-button" onClick={goToReceiptPage}>Confirm Order</button>
       </div>
     </div>
   );

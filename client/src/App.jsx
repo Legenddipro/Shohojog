@@ -16,6 +16,7 @@ import SellerProducts from "./routes/seller_products";
 import ProductDetails from "./routes/ProductDetails";
 import My_Profile from "./routes/MyProfile";
 import Home_Employee from "./routes/Home_Employee";
+import Home_Employee_Customercare from "./routes/Home_Employee_Customercare";
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -73,6 +74,18 @@ const App = () => {
             }
           />
           <Route
+            path="/Home_Employee_Customercare"
+            element={
+              isAuthenticated &&
+              localStorage.getItem("userType") === "employee" &&
+              localStorage.getItem("employeeType") === "customer_care" ? (
+                <Home_Employee_Customercare setAuth={setAuth} />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
             path="/Home_seller"
             element={
               isAuthenticated &&
@@ -95,19 +108,21 @@ const App = () => {
                 (localStorage.getItem("userType") === "seller" && (
                   <Navigate to="/Home_seller" />
                 )) ||
-                (localStorage.getItem("userType") === "employee" && (
-                  <Navigate to="/Home_Employee" />
-                )) || <Navigate to="/error" />
+                (localStorage.getItem("userType") === "employee" &&
+                  // Check employee type
+                  ((localStorage.getItem("employeeType") ===
+                    "courier_service" && <Navigate to="/Home_Employee" />) ||
+                    (localStorage.getItem("employeeType") ===
+                      "customer_care" && (
+                      <Navigate to="/Home_Employee_Customercare" />
+                    )))) || <Navigate to="/error" />
               )
             }
           />
           <Route
             path="/registration"
-            element={
-             
-                <Registration setAuth={setAuth} />
-              
-            }/>
+            element={<Registration setAuth={setAuth} />}
+          />
           <Route path="/seller/getSeller" element={<SellerDetails />} />
           // TO GET SELLER PRODUCTS
           <Route path="/seller-products" element={<SellerProducts />} />

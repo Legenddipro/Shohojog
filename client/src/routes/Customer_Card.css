@@ -1,0 +1,65 @@
+/* CustomerCard.css */
+
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .card__body {
+    text-align: center;
+  }
+  
+  .card__title {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .card__description {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  
+  .card__button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+  }
+  
+  .card__btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .card__btn--view-details {
+    background-color: #007bff;
+    color: #ffffff;
+    text-decoration: none;
+  }
+  
+  .card__btn--add-to-cart,
+  .card__btn--remove-from-cart,
+  .card__btn--added {
+    background-color: #28a745;
+    color: #ffffff;
+  }
+  
+  .card__btn--add-to-cart:hover,
+  .card__btn--remove-from-cart:hover {
+    background-color: #218838;
+  }
+  
+  .card__btn--added {
+    background-color: #6c757d;
+  }
+  
+  .card__btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  

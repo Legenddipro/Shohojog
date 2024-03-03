@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Home_Employee = ({ setAuth }) => {
+const Home_Employee_Customercare = ({ setAuth }) => {
   const navigate = useNavigate();
 
   const logoutEmployee = () => {
@@ -25,4 +25,4 @@ const Home_Employee = ({ setAuth }) => {
   );
 };
 
-export default Home_Employee;
+export default Home_Employee_Customercare;

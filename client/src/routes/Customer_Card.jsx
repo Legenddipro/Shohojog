@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom"; // Import Link component
+import "./Customer_Card.css"; // Import CSS file
 
 const Customer_Card = ({ productId, productName, price, category, stock }) => {
   const [isAddingToCart, setIsAddingToCart] = useState(false);

@@ -33,16 +33,26 @@ const Login = ({ setAuth }) => {
         localStorage.setItem("token", parseRes.jwtToken);
         setAuth(true);
         toast.success("Login Successful");
-        setUserType(parseRes.userType); // Set userType state
-        localStorage.setItem("userType", parseRes.userType); // Store userType in localStorage
-        localStorage.setItem("userId", parseRes.userId); // Store userId in localStorage
+        localStorage.setItem("userId", parseRes.userId);
+        localStorage.setItem("userType", parseRes.userType); // Store user type
+  
+        // If user is an employee, store employee type additionally
+        if (parseRes.userType === "employee") {
+          localStorage.setItem("employeeType", parseRes.employeeType);
+        }
+  
         // Determine where to navigate based on user type
         if (parseRes.userType === "customer") {
           setNavigateTo("/Home_Customer");
         } else if (parseRes.userType === "seller") {
           setNavigateTo("/Home_Seller");
         } else if (parseRes.userType === "employee") {
-          setNavigateTo("/Home_Employee");
+          // Check if user is an employee and navigate accordingly
+          if (parseRes.employeeType === "courier service") {
+            setNavigateTo("/Home_Employee");
+          } else if (parseRes.employeeType === "customer_care") {
+            setNavigateTo("/Home_Employees_Customercare");
+          }
         }
       } else {
         setAuth(false);
@@ -52,6 +62,7 @@ const Login = ({ setAuth }) => {
       console.error("Error:", error);
     }
   };
+  
 
   // If navigateTo is set, navigate to the specified route
   if (navigateTo) {
