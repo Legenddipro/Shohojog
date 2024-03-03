@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import './Registration.css';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -13,14 +13,36 @@ const Registration = () => {
     contact_no: '',
     e_mail: '',
     location_pst_code: '',
+    street: '',
+    area: '',
+    town: '',
     user_type: '',
     TIN: '',
     Website: '',
     factory_address: '',
     office_address: '',
     salary: '',
-    employee_type: ''
+    employee_type: '',
+    delivery_pst_code: '', // New field for delivery postal code
+    vehicle_type: '' // New field for vehicle type
   });
+
+  const [pstCodes, setPstCodes] = useState([]); // State to store available postal codes
+
+  useEffect(() => {
+    // Fetch available postal codes when component mounts
+    fetchPstCodes();
+  }, []);
+
+  const fetchPstCodes = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/auth/locations');
+      const data = await response.json();
+      setPstCodes(data);
+    } catch (error) {
+      console.error('Error fetching postal codes:', error);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -38,18 +60,16 @@ const Registration = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        toast.success(data.message); // Display success message from the backend
-        // Redirect to login page
+        toast.success(data.message);
         window.location.href = '/login';
       } else {
-        toast.error(data.error); // Display error message from the backend
+        toast.error(data.error);
       }
     } catch (error) {
       console.error('Error:', error);
     }
   };
   
-
   const renderAdditionalFields = () => {
     if (formData.user_type === 'seller') {
       return (
@@ -63,8 +83,23 @@ const Registration = () => {
     } else if (formData.user_type === 'employee') {
       return (
         <Fragment>
-          <input className="registration-input" type="text" name="salary" placeholder="Salary" onChange={handleChange} value={formData.salary} required />
-          <input className="registration-input" type="text" name="employee_type" placeholder="Employee Type" onChange={handleChange} value={formData.employee_type} required />
+          <input className="registration-input" type="number" name="salary" placeholder="Salary" onChange={handleChange} value={formData.salary} required />
+          <select className="registration-input" name="employee_type" onChange={handleChange} value={formData.employee_type} required>
+            <option value="">Select Employee Type*</option>
+            <option value="courier_service">Courier Service</option>
+            <option value="customer_care">Customer Care</option>
+          </select>
+          {formData.employee_type === 'courier_service' && (
+            <Fragment>
+              <select className="registration-input" name="delivery_pst_code" onChange={handleChange} value={formData.delivery_pst_code} required>
+                <option value="">Select Delivery Postal Code*</option>
+                {pstCodes.map(code => (
+                  <option key={code} value={code}>{code}</option>
+                ))}
+              </select>
+              <input className="registration-input" type="text" name="vehicle_type" placeholder="Vehicle Type" onChange={handleChange} value={formData.vehicle_type} />
+            </Fragment>
+          )}
         </Fragment>
       );
     }
@@ -84,6 +119,9 @@ const Registration = () => {
           <input className="registration-input" type="text" name="contact_no" placeholder="Contact Number*" onChange={handleChange} value={formData.contact_no} required />
           <input className="registration-input" type="email" name="e_mail" placeholder="Email*" onChange={handleChange} value={formData.e_mail} required />
           <input className="registration-input" type="text" name="location_pst_code" placeholder="Location Postal Code*" onChange={handleChange} value={formData.location_pst_code} required />
+          <input className="registration-input" type="text" name="street" placeholder="Street" onChange={handleChange} value={formData.street} required />
+          <input className="registration-input" type="text" name="area" placeholder="Area" onChange={handleChange} value={formData.area} required />
+          <input className="registration-input" type="text" name="town" placeholder="Town" onChange={handleChange} value={formData.town} required />
           <select className="registration-input" name="user_type" onChange={handleChange} value={formData.user_type} required>
             <option value="">Select User Type*</option>
             <option value="seller">Seller</option>

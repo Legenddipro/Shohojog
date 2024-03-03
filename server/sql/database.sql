@@ -1,11 +1,12 @@
 CREATE DATABASE SHOHOJOG;
  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+
 CREATE TABLE Location (
     pst_code VARCHAR(10) PRIMARY KEY,
     street VARCHAR(255),
     area VARCHAR(255),
     town VARCHAR(255)
-    
 );
 
 CREATE TABLE Users (
@@ -107,11 +108,13 @@ CREATE TABLE Employee (
 
 CREATE TABLE Courier_Service (
     service_id uuid PRIMARY KEY,
-    delivery_area VARCHAR(50),
+    delivery_pst_code VARCHAR(10),
     vehicle_type VARCHAR(50),
-		CONSTRAINT fk_courier_employee FOREIGN KEY (service_id) REFERENCES Employee(employee_id)
+    status VARCHAR(50),
+    CONSTRAINT fk_delivery_pst_code FOREIGN KEY (delivery_pst_code) REFERENCES Location(pst_code),
+    CONSTRAINT fk_courier_employee FOREIGN KEY (service_id) REFERENCES Employee(employee_id)
 );
-Alter ADD_COLUMN Courier_Service (status VARCHAR(50));
+
 
 CREATE TABLE "Order" (
     order_id SERIAL PRIMARY KEY,

@@ -247,5 +247,22 @@ customer_router.post('/remove_from_cart', async (req, res) => {
     res.status(500).json({ error: 'An unexpected error occurred' });
   }
 });
+//route for confirming the order
+//have to make a page for employee to confirm the order
+/* customer_router.post("/confirm_order", async (req, res) => {
+  try {
+    const { user_id } = req.body;
+    const confirmOrderQuery = `
+      UPDATE "Order"
+      SET isConfirm = true
+      WHERE customer_id = $1 AND isConfirm = false;
+    `;
+    await pool.query(confirmOrderQuery, [user_id]);
+    res.json({ message: "Order confirmed successfully" });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Internal Server Error");
+  }
+}); */
 
 module.exports = customer_router;

@@ -7,6 +7,17 @@ const authorization = require("../middleware/authorization");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
+router.get("/locations", async (req, res) => {
+  try {
+    const locations = await pool.query("SELECT pst_code FROM Location");
+    const pstCodes = locations.rows.map((location) => location.pst_code);
+    res.json(pstCodes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
 router.post("/register", validInfo, async (req, res) => {
   try {
     // Destructure the req.body
@@ -19,13 +30,18 @@ router.post("/register", validInfo, async (req, res) => {
       contact_no,
       e_mail,
       location_pst_code,
+      street, // Additional fields for location
+      area,
+      town,
       user_type,
-      TIN, // Additional fields for seller
+      TIN, 
       Website,
       factory_address,
       office_address,
-      salary, // Additional fields for employee
+      salary, 
       employee_type,
+      delivery_pst_code, // Added delivery_pst_code
+      vehicle_type 
     } = req.body;
 
     // Check if user exists
@@ -45,6 +61,14 @@ router.post("/register", validInfo, async (req, res) => {
     const client = await pool.connect();
     try {
       await client.query("BEGIN");
+
+      // Insert location if provided
+      if (street && area && town) {
+        await client.query(
+          "INSERT INTO Location (pst_code, street, area, town) VALUES ($1, $2, $3, $4)",
+          [location_pst_code, street, area, town]
+        );
+      }
 
       // Insert user into Users table
       const newUser = await client.query(
@@ -72,13 +96,28 @@ router.post("/register", validInfo, async (req, res) => {
           [user_id, TIN, Website, factory_address, office_address]
         );
       } else if (user_type === "customer") {
-        await client.query("INSERT INTO customer (user_id) VALUES ($1)", [
-          user_id,
-        ]);
-      } else if (user_type === "employee") {
+        await client.query(
+          "INSERT INTO customer (user_id) VALUES ($1)",
+          [user_id]
+        );
+      }
+      else if (user_type === "employee") {
         await client.query(
           "INSERT INTO employee (employee_id, salary, employee_type) VALUES ($1, $2, $3)",
           [user_id, salary, employee_type]
+        );
+      } 
+
+      // Insert additional info for courier service
+      if (employee_type === "courier_service") {
+        await client.query(
+          "INSERT INTO Courier_Service (service_id, delivery_pst_code, vehicle_type) VALUES ($1, $2, $3)",
+          [user_id, delivery_pst_code, vehicle_type] // Using provided delivery_pst_code
+        );
+      } else if (employee_type === "customer_care") {
+        await client.query(
+          "INSERT INTO Customer_Care (service_id) VALUES ($1)",
+          [user_id]
         );
       }
 
@@ -101,6 +140,7 @@ router.post("/register", validInfo, async (req, res) => {
     return res.status(500).json({ error: "Server Error" });
   }
 });
+
 
 //login route
 router.post("/login", validInfo, async (req, res) => {

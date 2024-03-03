@@ -46,7 +46,7 @@ const Home_Customer = ({ setAuth }) => {
         {isCartOpen && <Cart />}
       </div>
     </Fragment>
-  );
+  )
 };
 export default Home_Customer;
 
