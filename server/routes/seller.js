@@ -15,4 +15,5 @@ seller_router.get("/getSeller/:id", async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
 module.exports = seller_router;

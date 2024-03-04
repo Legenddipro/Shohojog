@@ -24,7 +24,8 @@ const Registration = () => {
     salary: '',
     employee_type: '',
     delivery_pst_code: '', // New field for delivery postal code
-    vehicle_type: '' // New field for vehicle type
+    vehicle_type: '',
+    company_name: '' // New field for vehicle type
   });
 
   const [pstCodes, setPstCodes] = useState([]); // State to store available postal codes
@@ -78,6 +79,7 @@ const Registration = () => {
           <input className="registration-input" type="text" name="Website" placeholder="Website" onChange={handleChange} value={formData.Website} />
           <input className="registration-input" type="text" name="factory_address" placeholder="Factory Address" onChange={handleChange} value={formData.factory_address} />
           <input className="registration-input" type="text" name="office_address" placeholder="Office Address" onChange={handleChange} value={formData.office_address} />
+          <input className="registration-input" type="text" name="company_name" placeholder="Company Name" onChange={handleChange} value={formData.company_name} />
         </Fragment>
       );
     } else if (formData.user_type === 'employee') {

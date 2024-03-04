@@ -247,22 +247,59 @@ customer_router.post('/remove_from_cart', async (req, res) => {
     res.status(500).json({ error: 'An unexpected error occurred' });
   }
 });
-//route for confirming the order
-//have to make a page for employee to confirm the order
-/* customer_router.post("/confirm_order", async (req, res) => {
+
+//route receipt page
+customer_router.get("/receipt/:userId", async (req, res) => {
   try {
-    const { user_id } = req.body;
-    const confirmOrderQuery = `
-      UPDATE "Order"
-      SET isConfirm = true
-      WHERE customer_id = $1 AND isConfirm = false;
+    const userId = req.params.userId;
+
+    // Fetch the unconfirmed order details for the user
+    const unconfirmedOrderQuery = `
+      SELECT order_id
+      FROM "Order"
+      WHERE customer_id = $1 AND isConfirm = false
+      LIMIT 1;
     `;
-    await pool.query(confirmOrderQuery, [user_id]);
-    res.json({ message: "Order confirmed successfully" });
+    const unconfirmedOrderResult = await pool.query(unconfirmedOrderQuery, [userId]);
+
+    if (unconfirmedOrderResult.rows.length === 0) {
+      return res.status(404).json({ error: "No unconfirmed orders found" });
+    }
+
+    const orderId = unconfirmedOrderResult.rows[0].order_id;
+
+    // Fetch product details for the unconfirmed order
+    const productDetailsQuery = `
+      SELECT 
+        Product.product_name,
+        Product.product_category,
+        Seller.company_name,
+        Contains.quantity,
+        Contains.price
+      FROM 
+        Contains
+      INNER JOIN 
+        Product ON Contains.product_id = Product.product_id
+      INNER JOIN 
+        Seller ON Product.seller_id = Seller.user_id
+      WHERE 
+        Contains.order_id = $1;
+    `;
+    const productDetailsResult = await pool.query(productDetailsQuery, [orderId]);
+
+    // Prepare receipt data
+    const receipt = {
+      order_id: orderId,
+      products: productDetailsResult.rows,
+      total_price: productDetailsResult.rows.reduce((acc, product) => acc + parseFloat(product.price), 0),
+    };
+
+    res.json(receipt);
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Internal Server Error");
   }
-}); */
+});
+
 
 module.exports = customer_router;

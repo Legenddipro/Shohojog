@@ -35,6 +35,7 @@ CREATE TABLE Seller (
     Website VARCHAR(255),
 		factory_address VARCHAR(255),
     office_address VARCHAR(255),
+    company_name VARCHAR(255)
      CONSTRAINT SELLER_USER_FK FOREIGN KEY (user_id) REFERENCES Users(User_id)
 );
 
@@ -59,6 +60,7 @@ CREATE TABLE Product (
     Seller_id uuid NOT NULL,
 		Category_id INT NOT NULL,
 		Stock INT ,
+    Seller_status VARCHAR(20) CHECK (Seller_status IN ('Available', 'Unavailable'));
 		CONSTRAINT NO_NEGATIVE_price CHECK(Price >= 0),
 	--	CONSTRAINT STATUS_CHECK CHECK(Status is in ('upcoming','in stock','stock out')),
 	 CONSTRAINT NO_NEGATIVE_STOCK CHECK (

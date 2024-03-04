@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Cart.css'; // Importing CSS file
 
 const Cart = () => {
+  const navigate = useNavigate(); // Navigate to different routes
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -85,7 +87,7 @@ const Cart = () => {
   };
 
   const goToReceiptPage = () => {
-    // Logic to navigate to the receipt page
+    navigate('/receipt'); // Navigate to receipt page
   };
 
   return (

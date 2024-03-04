@@ -42,6 +42,7 @@ router.post("/register", validInfo, async (req, res) => {
       employee_type,
       delivery_pst_code, // Added delivery_pst_code
       vehicle_type,
+      company_name
     } = req.body;
 
     // Check if user exists
@@ -92,8 +93,8 @@ router.post("/register", validInfo, async (req, res) => {
       // Insert additional info based on user_type
       if (user_type === "seller") {
         await client.query(
-          "INSERT INTO seller (user_id, TIN, Website, factory_address, office_address) VALUES ($1, $2, $3, $4, $5)",
-          [user_id, TIN, Website, factory_address, office_address]
+          "INSERT INTO seller (user_id, TIN, Website, factory_address, office_address,company_name) VALUES ($1, $2, $3, $4, $5, $6)",
+          [user_id, TIN, Website, factory_address, office_address,company_name]
         );
       } else if (user_type === "customer") {
         await client.query("INSERT INTO customer (user_id) VALUES ($1)", [
