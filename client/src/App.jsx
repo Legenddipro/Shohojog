@@ -17,6 +17,9 @@ import ProductDetails from "./routes/ProductDetails";
 import My_Profile from "./routes/MyProfile";
 import Home_Employee from "./routes/Home_Employee";
 import Home_Employee_Customercare from "./routes/Home_Employee_Customercare";
+import SearchProducts  from "./routes/Search_Products";
+ import EditInfo from "./routes/EditInfo";
+ import Add_Products from "./routes/Add_Products";
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -92,7 +95,7 @@ const App = () => {
               localStorage.getItem("userType") === "seller" ? (
                 <Home_seller setAuth={setAuth} />
               ) : (
-                <Navigate to="/" />
+                <Navigate to="/login" />
               )
             }
           />
@@ -128,6 +131,9 @@ const App = () => {
           <Route path="/seller-products" element={<SellerProducts />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/My_Profile" element={<My_Profile />} />
+          <Route path="/Search_Products" element={<SearchProducts />} />
+          <Route path="/edit_info_seller_products/:productId" element={<EditInfo />} />
+          <Route path="/add_product" element={<Add_Products />} />
         </Routes>
       </Router>
     </Fragment>

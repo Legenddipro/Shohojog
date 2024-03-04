@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import "./AllProducts.css"; // Import CSS file for styling
 import Card_seller from "./Card_seller";
+import { Link } from "react-router-dom";
 
 const SellerProducts = () => {
   const [products, setProducts] = useState([]);
@@ -25,10 +26,16 @@ const SellerProducts = () => {
   return (
     <Fragment>
       <h1>SELLER PRODUCTS</h1>
+          <button className="card__btn card__btn--add-product">
+          <Link to="/add_product" className="card__btn--add-product">
+            Add Product
+          </Link>
+        </button>
       <div className="products-container"> {/* Apply CSS styles to this container */}
         {products.map(product => (
           <Card_seller
             key={product.product_id}
+            productId={product.product_id} // Pass productId as prop
             productName={product.product_name}
             price={product.price}
             category={product.product_category}

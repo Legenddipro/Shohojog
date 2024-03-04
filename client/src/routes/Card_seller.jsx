@@ -6,13 +6,10 @@ import { Link, useNavigate } from "react-router-dom";
 
 //import "./Card.css"; // Import CSS file for styling
 
-const Card_seller = ({ productName, price, category, stock }) => {
+const Card_seller = ({ productName, price, category, stock, productId }) => {
   const navigate = useNavigate();
 
-  const handleAddToCart = () => {
-    // Add to cart functionality
-    console.log("Adding to cart...");
-  };
+  
 
   return (
     <div className="card">
@@ -36,12 +33,11 @@ const Card_seller = ({ productName, price, category, stock }) => {
       {/* Button Container */}
       <div className="card__button-container">
         {/* Add to Cart Button */}
-        <button className="card__btn card__btn--add-to-cart" onClick={handleAddToCart}>
-          {/* // <FiShoppingCart /> Add to Cart */}
-        </button>
+        
+        
 
         {/* View Details Button */}
-        <Link to="/edit_info_seller_products" className="card__btn card__btn--view-details">
+        <Link to={`/edit_info_seller_products/${productId}`} className="card__btn card__btn--view-details">
           EDIT INFO
         </Link>
       </div>

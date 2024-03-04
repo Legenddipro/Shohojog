@@ -1,0 +1,61 @@
+/* Home_Employee.css */
+
+.home-employee-container {
+    padding: 20px;
+  }
+  
+  .title-bar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .title {
+    margin: 0;
+  }
+  
+  .options {
+    display: flex;
+  }
+  
+  .option {
+    margin-right: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  
+  .option:hover {
+    background-color: #0056b3;
+  }
+  
+  .logout-option {
+    background-color: #dc3545;
+  }
+  
+  .employee-info {
+    margin-top: 60px; /* Adjust to avoid overlapping with title bar */
+  }
+  
+  .info-container {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .available-deliveries {
+    margin-top: 20px;
+  }
+  
+  /* Add more styles as needed */
+  

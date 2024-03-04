@@ -46,6 +46,7 @@ VALUES ('54321', 'Oak Avenue', 'Suburbia', 'Townsville');
   "location_pst_code": "54321",
   "user_type": "employee"
 }
+
 {
   "first_name": "Sophia",
   "middle_name": "Grace",
@@ -57,6 +58,7 @@ VALUES ('54321', 'Oak Avenue', 'Suburbia', 'Townsville');
   "location_pst_code": "12345",
   "user_type": "customer"
 }
+
 {
   "first_name": "Daniel",
   "middle_name": "Joseph",
@@ -68,6 +70,7 @@ VALUES ('54321', 'Oak Avenue', 'Suburbia', 'Townsville');
   "location_pst_code": "12345",
   "user_type": "employee"
 }
+
 {
   "first_name": "Alex",
   "middle_name": "James",

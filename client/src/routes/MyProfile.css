@@ -1,41 +1,54 @@
 /* MyProfile.css */
 
-.profile-container {
-    background-color: #f9f9f9; /* Light gray background color */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
-    max-width: 600px; /* Limit width to 600px */
-    margin: 0 auto; /* Center the profile container */
-  }
-  
-  .profile-heading {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #333; /* Dark text color */
-  }
-  
-  .profile-info {
-    margin-bottom: 10px;
-  }
-  
-  .profile-info p {
-    margin: 5px 0;
-    font-size: 18px;
-    color: #666; /* Medium gray text color */
-  }
-  
-  .loading-text {
-    font-size: 18px;
-    color: #666; /* Medium gray text color */
-    text-align: center;
-    margin-top: 50px;
-  }
-  
-  .error-text {
-    font-size: 18px;
-    color: #ff0000; /* Red text color */
-    text-align: center;
-    margin-top: 50px;
-  }
-  
+/* Style for the title bar */
+.title-bar {
+  background-color: #007bff;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+/* Style for the title */
+.title {
+  margin: 0;
+}
+
+/* Style for the Go Back button */
+.option {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px;
+}
+
+/* Style for the profile container */
+.my-profile-container {
+  margin-top: 60px; /* Adjust based on the height of the title bar */
+  padding: 20px;
+}
+
+/* Style for the profile heading */
+.profile-heading {
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+/* Style for the profile information */
+.profile-info {
+  background-color: #f4f4f4;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+/* Style for individual profile data */
+.profile-info p {
+  margin: 5px 0;
+}

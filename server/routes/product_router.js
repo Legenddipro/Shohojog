@@ -59,4 +59,50 @@ product_router.put('/edit_product/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-  module.exports = product_router;
+//ADD PRODUCT BY PRACHU.......................................
+// Route to add a new product
+product_router.post('/add_product', async (req, res) => {
+  const { product_name, price, product_category, product_features, seller_id, category_id, stock } = req.body;
+
+  try {
+    // Perform input data validation if required
+
+    // Insert the new product into the database
+    const query = `
+      INSERT INTO product (product_name, price, product_category, product_features, seller_id, category_id, stock)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING *
+    `;
+    const values = [product_name, price, product_category, product_features, seller_id, category_id, stock];
+    const newProduct = await pool.query(query, values);
+
+    res.status(201).json(newProduct.rows[0]); // Return the newly added product
+  } catch (error) {
+    console.error('Error adding product:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Route to delete a product
+product_router.delete('/delete_product/:id', async (req, res) => {
+  const productId = req.params.id;
+
+  try {
+    // Begin a transaction to ensure atomicity of operations
+    await pool.query('BEGIN');
+
+    // Delete the product from the product table
+    await pool.query('DELETE FROM product WHERE product_id = $1', [productId]);
+
+    await pool.query('COMMIT');
+
+    res.status(200).json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    // Rollback the transaction if any error occurs
+    await pool.query('ROLLBACK');
+    
+    console.error('Error deleting product:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+module.exports = product_router;
