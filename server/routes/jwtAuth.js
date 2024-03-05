@@ -66,7 +66,7 @@ router.post("/register", validInfo, async (req, res) => {
       // Insert location if provided
       if (street && area && town) {
         await client.query(
-          "INSERT INTO Location (pst_code, street, area, town) VALUES ($1, $2, $3, $4)",
+          "INSERT INTO Location_full (pst_code, street, area, town) VALUES ($1, $2, $3, $4)",
           [location_pst_code, street, area, town]
         );
       }

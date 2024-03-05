@@ -21,7 +21,7 @@ courier_router.get("/courier-info/:userId", async (req, res) => {
   INNER JOIN 
     Courier_Service cs ON u.user_id = cs.service_id 
   INNER JOIN 
-    Location l ON cs.delivery_pst_code = l.pst_code 
+    Location_full l ON cs.delivery_pst_code = l.pst_code 
   WHERE 
     u.user_id = $1;
     `;
@@ -38,6 +38,38 @@ courier_router.get("/courier-info/:userId", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+courier_router.get("/orders/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
 
+    // Query to fetch orders
+    const ordersQuery = `
+    SELECT 
+    order_id,
+    order_date,
+    isConfirm,
+    isPaid,
+    payment_date,
+    delivery_time,
+    customer_id,
+    delivery_status,
+    delivery_date,
+    pickup_date
+FROM 
+    "Order"
+WHERE 
+    delivery_status = 'Seller confirms' AND 
+    (SELECT location_pst_code FROM Users WHERE user_id = customer_id) = 
+    (SELECT delivery_pst_code FROM Courier_Service WHERE service_id = $1);
+
+    `;
+
+    const { rows } = await pool.query(ordersQuery, [userId]);
+
+    res.json(rows);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 module.exports = courier_router;
-

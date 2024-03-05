@@ -1,12 +1,36 @@
 CREATE DATABASE SHOHOJOG;
  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+CREATE OR REPLACE FUNCTION before_insert_location_full()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Check if the new pst_code exists in the location table
+    IF NOT EXISTS (SELECT 1 FROM location WHERE pst_code = NEW.pst_code) THEN
+        -- Insert the new pst_code into the location table
+        INSERT INTO location (pst_code) VALUES (NEW.pst_code);
+    END IF;
 
-CREATE TABLE Location (
-    pst_code VARCHAR(10) PRIMARY KEY,
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_before_insert_location_full
+BEFORE INSERT ON location_full
+FOR EACH ROW
+EXECUTE FUNCTION before_insert_location_full();
+
+
+
+CREATE TABLE location_full (
+    location_id SERIAL PRIMARY KEY,
+    pst_code VARCHAR(10) ,
     street VARCHAR(255),
     area VARCHAR(255),
     town VARCHAR(255)
+);
+
+CREATE TABLE location (
+    pst_code VARCHAR(10) PRIMARY KEY
 );
 
 CREATE TABLE Users (
@@ -126,12 +150,13 @@ CREATE TABLE "Order" (
 		payment_date DATE,
 		delivery_time TIMESTAMP,
 		customer_id uuid NOT NULL,
-    delivery_status TEXT;
-    delivery_date DATE
-    pickup_date DATE
-    courier_employee_id uuid ,-- Foreign key referencing Courier_Service		
+    delivery_status TEXT,
+    delivery_date DATE,
+    pickup_date DATE,
+    courier_employee_id uuid ,	
      CONSTRAINT fk_courier_employee FOREIGN KEY (courier_employee_id) REFERENCES Courier_Service(service_id),
-		CONSTRAINT customer_order_fk FOREIGN KEY (customer_id) REFERENCES Customer (user_id)
+		CONSTRAINT customer_order_fk FOREIGN KEY (customer_id) REFERENCES Customer (user_id),
+    CONSTRAINT fk_courier_employee FOREIGN KEY (courier_employee_id) REFERENCES Courier_Service(service_id)
 );
 
 

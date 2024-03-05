@@ -1,12 +1,13 @@
-// Home_Employee.jsx
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Home_Employee.css"; // Import CSS file
+import DeliveryCard from "./DeliveryCard"; // Import DeliveryCard component
 
 const Home_Employee = ({ setAuth }) => {
   const navigate = useNavigate();
   const [employeeInfo, setEmployeeInfo] = useState(null);
+  const [availableDeliveries, setAvailableDeliveries] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchEmployeeInfo = async () => {
@@ -19,8 +20,6 @@ const Home_Employee = ({ setAuth }) => {
           `http://localhost:5000/courier/courier-info/${userId}`
         );
         const data = await response.json();
-        // Inside the useEffect hook after setting the employeeInfo state
-        console.log("Employee Info:", employeeInfo);
 
         if (response.ok) {
           setEmployeeInfo(data);
@@ -35,6 +34,32 @@ const Home_Employee = ({ setAuth }) => {
     fetchEmployeeInfo();
   }, []);
 
+  useEffect(() => {
+    const fetchAvailableDeliveries = async () => {
+      try {
+        // Fetch user ID from local storage
+        const userId = localStorage.getItem("userId");
+
+        // Fetch available deliveries for the courier
+        const response = await fetch(
+          `http://localhost:5000/courier/orders/${userId}`
+        );
+        const data = await response.json();
+
+        if (response.ok) {
+          setAvailableDeliveries(data);
+          setLoading(false);
+        } else {
+          console.error("Error fetching available deliveries:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching available deliveries:", error);
+      }
+    };
+
+    fetchAvailableDeliveries();
+  }, []);
+
   const logoutEmployee = () => {
     // Remove employee-related items from local storage
     localStorage.removeItem("token");
@@ -45,6 +70,11 @@ const Home_Employee = ({ setAuth }) => {
     setAuth(false);
     // Navigate to the login page
     navigate("/login");
+  };
+
+  const handleConfirmDelivery = (orderId) => {
+    // Add logic to confirm the delivery here
+    console.log("Confirm delivery with ID:", orderId);
   };
 
   return (
@@ -77,10 +107,20 @@ const Home_Employee = ({ setAuth }) => {
         )}
       </div>
       <div className="available-deliveries">
-        {/* Scrollable section for available deliveries */}
         <h2>Available Deliveries</h2>
-        {/* Add your content for available deliveries here */}
-        <p>This section will contain the list of available deliveries.</p>
+        {loading ? (
+          <p>Loading available deliveries...</p>
+        ) : (
+          <div className="delivery-list">
+            {availableDeliveries.map((delivery) => (
+              <DeliveryCard
+                key={delivery.order_id}
+                delivery={delivery}
+                onConfirm={handleConfirmDelivery}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
