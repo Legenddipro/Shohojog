@@ -54,7 +54,7 @@ Category_name VARCHAR(50)
 CREATE TABLE Product (
     Product_id SERIAL PRIMARY KEY,
     Product_name VARCHAR(255),
-    Price DECIMAL(10, 2), -- 
+    Price DECIMAL(10, 2), 
     Product_category VARCHAR(50),
     Product_features TEXT,
     Seller_id uuid NOT NULL,
@@ -126,6 +126,9 @@ CREATE TABLE "Order" (
 		payment_date DATE,
 		delivery_time TIMESTAMP,
 		customer_id uuid NOT NULL,
+    delivery_status TEXT;
+    delivery_date DATE
+    pickup_date DATE
     courier_employee_id uuid ,-- Foreign key referencing Courier_Service		
      CONSTRAINT fk_courier_employee FOREIGN KEY (courier_employee_id) REFERENCES Courier_Service(service_id),
 		CONSTRAINT customer_order_fk FOREIGN KEY (customer_id) REFERENCES Customer (user_id)

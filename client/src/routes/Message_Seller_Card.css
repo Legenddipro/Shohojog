@@ -1,0 +1,72 @@
+/* Message_Seller_Card.css */
+
+.message-seller-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.order-info {
+  margin-bottom: 16px;
+}
+
+.order-info h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333333;
+}
+
+.product-info {
+  margin-bottom: 16px;
+}
+
+.product-info h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333333;
+}
+
+.product-info p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #666666;
+}
+
+.pickup-section {
+  margin-bottom: 16px;
+}
+
+.pickup-section label {
+  font-size: 16px;
+  color: #333333;
+  margin-right: 8px;
+}
+
+.pickup-date-input {
+  padding: 8px 12px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.confirm-pickup-button {
+  background-color: #4caf50;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.confirm-pickup-button:hover {
+  background-color: #388e3c;
+}

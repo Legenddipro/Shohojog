@@ -8,32 +8,55 @@ const Customer_Receipt = () => {
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate(); // Initialize the navigate function
 
-  useEffect(() => {
-    const fetchReceipt = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/customer/receipt/${userId}`);
-        setReceiptData(response.data);
-      } catch (error) {
-        console.error('Error fetching receipt:', error);
-      }
-    };
+  const fetchReceipt = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/customer/receipt/${userId}`);
+      setReceiptData(response.data);
+    } catch (error) {
+      console.error('Error fetching receipt:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchReceipt();
   }, [userId]);
 
-  const handleBuy = () => {
-    // Dummy function for buy button
-    alert('Buy button clicked');
+  const handleBuy = async () => {
+    try {
+      // Call the backend route to confirm the order
+      const response = await axios.post(`http://localhost:5000/customer/confirm_order`, { user_id: userId });
+      // Display an alert to the customer indicating the order confirmation
+      alert('You will receive a message shortly from the seller. Please wait.');
+      navigate('/Home_Customer');
+    } catch (error) {
+      console.error('Error confirming order:', error);
+      alert('An error occurred while confirming the order. Please try again.'); // Show error message
+    }
   };
+  
 
-  const handleCancel = () => {
-    // Dummy function for cancel button
-    alert('Cancel button clicked');
+  const handleCancel = async () => {
+    try {
+      const response = await axios.post(`http://localhost:5000/customer/cancel_cart`, { user_id: userId });
+      alert(response.data.message); // Show success message
+      // Reload the receipt data after cancelling the cart
+      fetchReceipt();
+      // Navigate back to Home_Customer
+      navigate('/Home_Customer');
+    } catch (error) {
+      console.error('Error cancelling cart:', error);
+      alert('An error occurred while cancelling the cart. Please try again.'); // Show error message
+    }
   };
 
   const handleEdit = () => {
     // Navigate back to the cart
     navigate('/cart');
+  };
+
+  const handleMoreShopping = () => {
+    // Navigate back to Home_Customer
+    navigate('/Home_Customer');
   };
 
   return (
@@ -74,8 +97,9 @@ const Customer_Receipt = () => {
         )}
         <div className="buttons-container">
           <button className="button buy-button" onClick={handleBuy}>Buy</button>
-          <button className="button cancel-button" onClick={handleCancel}>Cancel</button>
+          <button className="button cancel-button" onClick={handleCancel}>Cancel Cart</button> {/* Changed button text */}
           <button className="button edit-button" onClick={handleEdit}>Edit</button>
+          <button className="button more-shopping-button" onClick={handleMoreShopping}>More Shopping</button>
         </div>
       </div>
     </div>

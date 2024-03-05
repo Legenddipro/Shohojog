@@ -1,10 +1,17 @@
+/* HomeSeller.css */
+
 .title-bar {
-  background-color: #333;
-  color: #fff;
-  padding: 10px;
+  background-color: #007bff; /* Blue color */
+  color: #ffffff; /* White text color */
+  padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.title-bar h1 {
+  font-size: 24px;
+  margin: 0;
 }
 
 .navigation {
@@ -14,8 +21,14 @@
 
 .navigation a {
   margin-right: 20px;
-  color: #fff;
+  color: #ffffff;
   text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease; /* Smooth color transition on hover */
+}
+
+.navigation a:hover {
+  color: #f8f9fa; /* Lighter color on hover */
 }
 
 .search-bar {
@@ -23,13 +36,27 @@
 }
 
 .search-bar input[type="text"] {
-  padding: 8px;
+  padding: 10px;
   border-radius: 5px;
-  border: none;
+  border: 1px solid #ced4da; /* Light gray border */
   outline: none;
+  transition: border-color 0.3s ease; /* Smooth border color transition on focus */
 }
 
-.logout-option {
-  display: flex;
-  align-items: center;
+.search-bar input[type="text"]:focus {
+  border-color: #007bff; /* Blue border color on focus */
+}
+
+.logout-option button {
+  background-color: #dc3545; /* Red color */
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth background color transition on hover */
+}
+
+.logout-option button:hover {
+  background-color: #c82333; /* Darker red color on hover */
 }

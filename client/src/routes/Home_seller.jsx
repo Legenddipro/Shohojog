@@ -19,7 +19,7 @@ const Home_seller = ({ setAuth }) => {
         <div className="navigation">
           <Link to="/seller/getSeller">MY PROFILE</Link>
           <Link to="/seller-products">MY PRODUCTS</Link>
-          <Link to="/seller-messages">MY MESSAGES</Link>
+          <Link to="/message_seller">MY MESSAGES</Link>
           <Link to="/Search_Products">Search Products</Link>
           <div className="logout-option">
             <button onClick={handleLogout}>Log out</button>

@@ -1,8 +1,6 @@
-
-// EditInfo.jsx
 import React, { useState, useEffect } from "react";
 import "./EditInfo.css";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const EditInfo = () => {
   const { productId } = useParams();
@@ -10,6 +8,7 @@ const EditInfo = () => {
   const [features, setFeatures] = useState("");
   const [stock, setStock] = useState(0);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch product details based on productId
@@ -42,6 +41,7 @@ const EditInfo = () => {
       if (response.ok) {
         // Product updated successfully
         console.log("Product updated successfully");
+        navigate("/seller-products"); // Navigate back to seller products
       } else {
         throw new Error("Failed to update product");
       }

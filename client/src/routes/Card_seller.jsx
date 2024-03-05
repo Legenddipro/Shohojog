@@ -10,7 +10,7 @@ const Card_seller = ({ productName, price, category, stock, productId }) => {
   const navigate = useNavigate();
 
   
-
+  const priceValue = typeof price === 'string' ? parseFloat(price) : price;
   return (
     <div className="card">
       <div className="card__body">

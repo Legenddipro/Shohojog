@@ -22,6 +22,7 @@ import EditInfo from "./routes/EditInfo";
 import Add_Products from "./routes/Add_Products";
 import Customer_Receipt from "./routes/Customer_Receipt";
 import Cart from "./routes/Cart";
+import Message_Seller from "./routes/Message_Seller";
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -141,6 +142,7 @@ const App = () => {
           <Route path="/add_product" element={<Add_Products />} />
           <Route path="/receipt" element={<Customer_Receipt />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/message_seller" element={<Message_Seller />} />
         </Routes>
       </Router>
     </Fragment>

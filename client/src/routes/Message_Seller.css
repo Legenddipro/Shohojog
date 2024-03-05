@@ -1,0 +1,53 @@
+/* Message_Seller.css */
+
+.message-seller-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Set container height to fill the viewport */
+  padding-top: 80px; /* Add padding to create space for the title bar */
+  position: relative; /* Position the container relative for absolute positioning of elements */
+}
+
+.title-bar {
+  background-color: #333; /* Dark background color */
+  color: #fff; /* Light text color */
+  padding: 20px;
+  position: fixed; /* Stick title bar to the top */
+  top: 0; /* Position title bar at the top */
+  width: 100%; /* Make the title bar span the entire width */
+  z-index: 1; /* Ensure title bar is above other content */
+}
+
+.title-section {
+  flex: 1; /* Take up remaining space */
+}
+
+.title {
+  margin: 0;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+}
+
+.go-back-button {
+  background-color: transparent;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.go-back-button:hover {
+  text-decoration: underline;
+}
+
+.no-new-messages {
+  position: absolute; /* Position the message absolutely */
+  top: 60px; /* Adjust top value to position below the title bar */
+  width: 100%; /* Span the entire width */
+  text-align: center; /* Center-align the text */
+  font-size: 50px;
+  color: #888; /* Adjust color as needed */
+}
