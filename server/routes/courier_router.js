@@ -2,6 +2,7 @@ const express = require("express");
 const pool = require("../database/db");
 const courier_router = express.Router();
 
+//History router
 // Route to get all history
 courier_router.get("/courier-orders-history/:userId", async (req, res) => {
   try {
@@ -41,7 +42,7 @@ courier_router.get("/courier-orders-history/:userId", async (req, res) => {
     "Order".delivery_date,
     "Order".pickup_date
   ORDER BY
-    "Order".order_id ASC;
+    "Order".payment_date DESC;
   
     `;
 
@@ -53,7 +54,7 @@ courier_router.get("/courier-orders-history/:userId", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
+//PAY router
 // Route to update order details when payment is received
 courier_router.put("/on-payment-received/:orderId", async (req, res) => {
   try {

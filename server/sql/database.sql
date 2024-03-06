@@ -1,5 +1,54 @@
 CREATE DATABASE SHOHOJOG;
  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+ CREATE OR REPLACE FUNCTION insert_message_on_payment()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.isPaid = true THEN
+        INSERT INTO Message (sender_id, receiver_id, message_time, message)
+        VALUES (
+            (SELECT user_id FROM Users WHERE user_type = 'Admin'),
+            NEW.customer_id,
+            CURRENT_TIMESTAMP,
+            'Thanks for buying our product. Please give a review or message us for return.'
+        );
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER on_payment_update
+AFTER UPDATE OF isPaid ON "Order"
+FOR EACH ROW
+EXECUTE FUNCTION insert_message_on_payment();
+CREATE OR REPLACE FUNCTION insert_message()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.delivery_status IS NULL THEN
+        INSERT INTO Message (sender_id, receiver_id, message_time, message)
+        VALUES ((SELECT user_id FROM Users WHERE user_type = 'Admin'), NEW.customer_id, NOW(), 'Your Products are waiting in the cart. Buy them before stock runs out');
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER insert_message_trigger
+AFTER INSERT ON "Order"
+FOR EACH ROW
+EXECUTE FUNCTION insert_message();
+CREATE OR REPLACE PROCEDURE insert_message_procedure(customer_id_param UUID)
+LANGUAGE SQL
+AS $$
+INSERT INTO Message (sender_id, receiver_id, message_time, message)
+SELECT
+    (SELECT user_id FROM Users WHERE user_type = 'Admin'),
+    customer_id_param,
+    NOW(),
+    'Your Products order is sent to the Seller. Waiting for the drop-off'
+FROM
+    "Order"
+WHERE
+    delivery_status = 'seller unconfirmed';
+$$;
 
 CREATE OR REPLACE FUNCTION before_insert_location_full()
 RETURNS TRIGGER AS $$

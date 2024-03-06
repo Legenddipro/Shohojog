@@ -87,16 +87,19 @@ const Customer_Card = ({ productId, productName, price, category, stock }) => {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/customer/remove_from_cart", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: userId, // Use retrieved user ID
-          product_id: productId,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:5000/customer/remove_from_cart",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId, // Use retrieved user ID
+            product_id: productId,
+          }),
+        }
+      );
       const data = await response.json();
       console.log(data); // Log the response from the server
       // Optionally, you can show a message or update the UI after successful removal from cart
@@ -151,10 +154,14 @@ const Customer_Card = ({ productId, productName, price, category, stock }) => {
           View Details
         </Link>
 
-        {/* Add to Cart Button or Added */}
+        {/* Add to Cart Button or Out of Stock */}
         {quantity > 0 ? (
-          <button className="card__btn card__btn--added" disabled={true}>
+          <button className="card__btn card__btn--added" disabled>
             Added
+          </button>
+        ) : stock === 0 ? (
+          <button className="card__btn card__btn--out-of-stock" disabled>
+            Out of Stock
           </button>
         ) : (
           <button
@@ -165,6 +172,7 @@ const Customer_Card = ({ productId, productName, price, category, stock }) => {
             {isAddingToCart ? "Adding to Cart..." : "Add to Cart"}
           </button>
         )}
+
         {/* Remove from Cart Button */}
         {quantity > 0 && (
           <button

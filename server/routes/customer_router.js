@@ -316,67 +316,95 @@ customer_router.get("/receipt/:userId", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-  //cancel cart
-  customer_router.post("/cancel_cart", async (req, res) => {
-    try {
-      const { user_id } = req.body;
+//cancel cart
+customer_router.post("/cancel_cart", async (req, res) => {
+  try {
+    const { user_id } = req.body;
 
-      // Find the order_id where user_id is not confirmed (isConfirm = false)
-      const findOrderIdQuery =
-        'SELECT order_id FROM "Order" WHERE customer_id = $1 AND isConfirm = false';
-      const { rows } = await pool.query(findOrderIdQuery, [user_id]);
+    // Find the order_id where user_id is not confirmed (isConfirm = false)
+    const findOrderIdQuery =
+      'SELECT order_id FROM "Order" WHERE customer_id = $1 AND isConfirm = false';
+    const { rows } = await pool.query(findOrderIdQuery, [user_id]);
 
-      if (rows.length === 0) {
-        // If no unconfirmed order is found, send error response
-        return res.status(400).json({ error: "Cart is Empty" });
-      }
-
-      const order_id = rows[0].order_id;
-
-      // Delete all entries from Contains table
-      const deleteContainsQuery = "DELETE FROM Contains WHERE order_id = $1";
-      await pool.query(deleteContainsQuery, [order_id]);
-
-      // Delete the order from Order table
-      const deleteOrderQuery = 'DELETE FROM "Order" WHERE order_id = $1';
-      await pool.query(deleteOrderQuery, [order_id]);
-
-      // Send success response
-      res.status(200).json({ message: "Cart cancelled successfully" });
-    } catch (error) {
-      console.error("Error cancelling cart:", error);
-      res.status(500).json({ error: "An unexpected error occurred" });
+    if (rows.length === 0) {
+      // If no unconfirmed order is found, send error response
+      return res.status(400).json({ error: "Cart is Empty" });
     }
-  });
 
-  //buy router
-  customer_router.post("/confirm_order", async (req, res) => {
-    try {
-      // Extract the user ID from the request body
-      const { user_id } = req.body;
-      // Update the delivery status to "seller unconfirmed" for the unconfirmed order associated with the user ID
-      const updateDeliveryStatusQuery =
-        'UPDATE "Order" SET isConfirm = true, delivery_status = $1 WHERE customer_id = $2 AND isConfirm = false RETURNING order_id';
-      const { rows } = await pool.query(updateDeliveryStatusQuery, ['seller unconfirmed', user_id]);
-      if (rows.length === 0) {
-        // If no unconfirmed order is found, send an error response
-        return res
-          .status(400)
-          .json({ error: "No unconfirmed order found for the user" });
-      }
-      // Send a success response with the order ID of the confirmed order
-      res
-        .status(200)
-        .json({
-          message: "Order confirmed successfully",
-          order_id: rows[0].order_id,
-        });
-    } catch (error) {
-      console.error("Error confirming order:", error);
-      // Send an error response if an unexpected error occurs
-      res.status(500).json({ error: "An unexpected error occurred" });
+    const order_id = rows[0].order_id;
+
+    // Delete all entries from Contains table
+    const deleteContainsQuery = "DELETE FROM Contains WHERE order_id = $1";
+    await pool.query(deleteContainsQuery, [order_id]);
+
+    // Delete the order from Order table
+    const deleteOrderQuery = 'DELETE FROM "Order" WHERE order_id = $1';
+    await pool.query(deleteOrderQuery, [order_id]);
+
+    // Send success response
+    res.status(200).json({ message: "Cart cancelled successfully" });
+  } catch (error) {
+    console.error("Error cancelling cart:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
+  }
+});
+
+//buy router
+customer_router.post("/confirm_order", async (req, res) => {
+  try {
+    // Extract the user ID from the request body
+    const { user_id } = req.body;
+    // Update the delivery status to "seller unconfirmed" for the unconfirmed order associated with the user ID
+    const updateDeliveryStatusQuery =
+      'UPDATE "Order" SET isConfirm = true, delivery_status = $1 WHERE customer_id = $2 AND isConfirm = false RETURNING order_id';
+    const { rows } = await pool.query(updateDeliveryStatusQuery, [
+      "seller unconfirmed",
+      user_id,
+    ]);
+    if (rows.length === 0) {
+      // If no unconfirmed order is found, send an error response
+      return res
+        .status(400)
+        .json({ error: "No unconfirmed order found for the user" });
     }
-  });  
+    // Call the stored procedure to insert a message
+    await pool.query("CALL insert_message_procedure($1)", [user_id]);
+    // Send a success response with the order ID of the confirmed order
+    res.status(200).json({
+      message: "Order confirmed successfully",
+      order_id: rows[0].order_id,
+    });
+  } catch (error) {
+    console.error("Error confirming order:", error);
+    // Send an error response if an unexpected error occurs
+    res.status(500).json({ error: "An unexpected error occurred" });
+  }
+});
 
+// Route to fetch all messages for a specific receiver (customer)
+customer_router.get('/fetch_messages', async (req, res) => {
+  try {
+      const { receiver_id } = req.query; // Get receiver ID from query parameters
+
+      // Query to fetch messages for the specified receiver with sender's username
+      const query = `
+          SELECT m.*, u.user_name AS sender_username
+          FROM Message m
+          INNER JOIN Users u ON m.sender_id = u.user_id
+          WHERE m.receiver_id = $1
+          ORDER BY m.message_time DESC`; // Assuming you want to order messages by time
+
+      // Execute the query
+      const { rows } = await pool.query(query, [receiver_id]);
+      
+      // Send the messages as response
+      res.json({ messages: rows });
+  } catch (error) {
+      console.error("Error fetching messages:", error);
+      res.status(500).json({ error: "An unexpected error occurred" });
+  }
+});
+
+module.exports = customer_router;
 
 module.exports = customer_router;

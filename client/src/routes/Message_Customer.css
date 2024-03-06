@@ -1,0 +1,53 @@
+/* Message_Customer.css */
+.message-container {
+    padding: 20px;
+  }
+  
+  .title-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .message-header {
+    font-size: 24px;
+  }
+  
+  .go-back-button {
+    font-size: 16px;
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  .message-list {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .message-card {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .message-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  
+  .message-sender {
+    font-weight: bold;
+  }
+  
+  .message-time {
+    color: #888;
+    font-size: 14px;
+  }
+  
+  .message-text {
+    margin-top: 5px;
+  }
+  
