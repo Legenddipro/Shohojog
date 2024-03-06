@@ -23,6 +23,8 @@ import Add_Products from "./routes/Add_Products";
 import Customer_Receipt from "./routes/Customer_Receipt";
 import Cart from "./routes/Cart";
 import Message_Seller from "./routes/Message_Seller";
+import Message_Employee from "./routes/Message_Employee";
+import Courier_Delivery_History from "./routes/Courier_Delivery_History";
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -143,6 +145,8 @@ const App = () => {
           <Route path="/receipt" element={<Customer_Receipt />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/message_seller" element={<Message_Seller />} />
+          <Route path="/message_employee" element={<Message_Employee />} />
+          <Route path="/history" element={<Courier_Delivery_History />} />
         </Routes>
       </Router>
     </Fragment>

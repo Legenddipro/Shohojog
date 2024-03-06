@@ -35,12 +35,12 @@ const Login = ({ setAuth }) => {
         toast.success("Login Successful");
         localStorage.setItem("userId", parseRes.userId);
         localStorage.setItem("userType", parseRes.userType); // Store user type
-  
+
         // If user is an employee, store employee type additionally
         if (parseRes.userType === "employee") {
           localStorage.setItem("employeeType", parseRes.employeeType);
         }
-  
+
         // Determine where to navigate based on user type
         if (parseRes.userType === "customer") {
           setNavigateTo("/Home_Customer");
@@ -62,7 +62,6 @@ const Login = ({ setAuth }) => {
       console.error("Error:", error);
     }
   };
-  
 
   // If navigateTo is set, navigate to the specified route
   if (navigateTo) {
@@ -82,7 +81,9 @@ const Login = ({ setAuth }) => {
             onChange={handleChange}
             value={formData.e_mail}
             required
+            autoComplete="e_mail"
           />
+
           <input
             className="login-input"
             type="password"
@@ -91,7 +92,9 @@ const Login = ({ setAuth }) => {
             onChange={handleChange}
             value={formData.user_password}
             required
+            autoComplete="current-password"
           />
+
           <button className="login-button" type="submit">
             Login
           </button>

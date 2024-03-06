@@ -315,6 +315,7 @@ customer_router.get("/receipt/:userId", async (req, res) => {
     console.error("Error:", error);
     res.status(500).send("Internal Server Error");
   }
+});
   //cancel cart
   customer_router.post("/cancel_cart", async (req, res) => {
     try {
@@ -376,6 +377,6 @@ customer_router.get("/receipt/:userId", async (req, res) => {
       res.status(500).json({ error: "An unexpected error occurred" });
     }
   });  
-});
+
 
 module.exports = customer_router;

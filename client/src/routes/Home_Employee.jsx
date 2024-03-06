@@ -72,9 +72,32 @@ const Home_Employee = ({ setAuth }) => {
     navigate("/login");
   };
 
-  const handleConfirmDelivery = (orderId) => {
-    // Add logic to confirm the delivery here
-    console.log("Confirm delivery with ID:", orderId);
+  const handleConfirmDelivery = async (orderId) => {
+    try {
+      // Fetch user ID from local storage
+      const userId = localStorage.getItem("userId");
+
+      // Make a PUT request to the backend API to confirm the delivery
+      const response = await fetch(
+        `http://localhost:5000/courier/confirm-delivery/${orderId}/${userId}`,
+        {
+          method: "PUT",
+        }
+      );
+
+      if (response.ok) {
+        // Refresh available deliveries after confirming the delivery
+        const updatedDeliveries = availableDeliveries.filter(
+          (delivery) => delivery.order_id !== orderId
+        );
+        setAvailableDeliveries(updatedDeliveries);
+        console.log("Delivery confirmed successfully");
+      } else {
+        console.error("Error confirming delivery:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error confirming delivery:", error);
+    }
   };
 
   return (
@@ -84,6 +107,18 @@ const Home_Employee = ({ setAuth }) => {
           <h1 className="title">Shohojog Courier Portal</h1>
         </div>
         <div className="options">
+          <button
+            className="option history-option"
+            onClick={() => navigate("/history")}
+          >
+            History
+          </button>
+          <button
+            className="option messages-option"
+            onClick={() => navigate("/message_employee")}
+          >
+            Messages
+          </button>
           <button className="option logout-option" onClick={logoutEmployee}>
             Log out
           </button>

@@ -1,0 +1,28 @@
+/* Message_Courier_Card.css */
+
+.message-courier-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background-color: #f9f9f9;
+}
+
+.message-courier-card h3 {
+  margin-top: 0;
+}
+
+.message-courier-card button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.message-courier-card button:hover {
+  background-color: #0056b3;
+}
+
+  

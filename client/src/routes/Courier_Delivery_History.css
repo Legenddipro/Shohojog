@@ -1,0 +1,86 @@
+/* Courier_Delivery_History.css */
+
+/* Fixed title bar styles */
+.title-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    padding: 10px 20px;
+    z-index: 1000;
+  }
+  
+  /* Title styles */
+  .title {
+    font-size: 24px;
+    color: #fff;
+    margin-right: 20px;
+  }
+  
+  /* Go back link styles */
+  .go-back-option {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+  
+  .go-back-option:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Body padding to prevent content from being hidden behind the fixed title bar */
+  body {
+    padding-top: 50px;
+  }
+  
+  /* Container styles */
+  .courier-history-container {
+    margin-top: 50px;
+    overflow-x: auto; /* Enable horizontal scrolling */
+  }
+  
+  /* Table styles */
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .history-table th,
+  .history-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .history-table th {
+    background-color: #f2f2f2;
+  }
+  
+  /* Ensure table cells are not wider than their content */
+  .history-table td {
+    white-space: nowrap;
+  }
+  
+  /* Set a fixed width for the Order ID column */
+  .history-table td:nth-child(1) {
+    width: 100px;
+  }
+  
+  /* Set a fixed width for the Order Date column */
+  .history-table td:nth-child(2) {
+    width: 150px;
+  }
+  
+  /* Set a fixed width for the Status column */
+  .history-table td:nth-child(3) {
+    width: 100px;
+  }
+  
+  /* Set a fixed width for the Total Payment column */
+  .history-table td:nth-child(4) {
+    width: 150px;
+  }
+  
