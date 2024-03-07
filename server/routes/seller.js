@@ -56,40 +56,32 @@ seller_router.post("/confirmOrder", async (req, res) => {
   try {
     const { orderid, pickupDate } = req.body;
 
-    // Update the delivery status and pickup date in the "Order" table
-    const updateOrderQuery = `
-      UPDATE "Order"
-      SET delivery_status = 'Seller confirms', pickup_date = $1
-      WHERE order_id = $2;
-    `;
-    
-    await pool.query(updateOrderQuery, [pickupDate, orderid]);
-
-    // Update product stock and status in the "Product" table
+    // Update product stock in the "Product" table
     const updateProductQuery = `
       UPDATE Product
-      SET stock = CASE
-                      WHEN stock > quantity THEN stock - quantity
-                      ELSE 0
-                  END,
-          seller_status = CASE
-                             WHEN stock > quantity THEN seller_status
-                             ELSE 'Unavailable'
-                         END
+      SET stock = stock - quantity
       FROM Contains
       WHERE Product.product_id = Contains.product_id
-      AND Contains.order_id = $1;
+      AND Contains.order_id = $1
+      RETURNING *, status;
     `;
 
-    await pool.query(updateProductQuery, [orderid]);
+    // Execute the update query
+    const updatedProductsResult = await pool.query(updateProductQuery, [orderid]);
+    const updatedProducts = updatedProductsResult.rows;
 
-    res.status(200).send("Order confirmed successfully");
+    // Call the PL/pgSQL function to update the order status
+    const updateOrderStatusQuery = `
+      SELECT update_order_status($1, $2);
+    `;
+    
+    await pool.query(updateOrderStatusQuery, [orderid, pickupDate]);
+    console.log("Updated products:", updatedProducts); 
+    res.status(200).json({ message: "Order confirmed successfully", updatedProducts });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Internal Server Error");
   }
 });
-
-
 
 module.exports = seller_router;

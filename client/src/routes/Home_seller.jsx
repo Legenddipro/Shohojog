@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import AllProducts from './All_products';
-import './HomeSeller.css'; 
+import './Home_Seller.css'; 
 
 const Home_seller = ({ setAuth }) => {
   const handleLogout = () => {
@@ -20,7 +20,7 @@ const Home_seller = ({ setAuth }) => {
           <Link to="/seller/getSeller">MY PROFILE</Link>
           <Link to="/seller-products">MY PRODUCTS</Link>
           <Link to="/message_seller">MY MESSAGES</Link>
-          <Link to="/Search_Products">Search Products</Link>
+          <Link to="/Search_Products">SEARCH PRODUCTS</Link>
           <div className="logout-option">
             <button onClick={handleLogout}>Log out</button>
           </div>

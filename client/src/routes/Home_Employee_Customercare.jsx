@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import './Home_Employee_Customercare.css'; // Import CSS file for styling
 
 const Home_Employee_Customercare = ({ setAuth }) => {
   const navigate = useNavigate();
@@ -16,13 +17,29 @@ const Home_Employee_Customercare = ({ setAuth }) => {
     navigate('/login');
   };
 
+  const goToStatsPage = () => {
+    // Navigate to the stats page
+    navigate('/stats');
+  };
+
   return (
-    <div>
-      <h1>Welcome, Employee!</h1>
-      <p>This is the home page for employees.</p>
-      <button onClick={logoutEmployee}>Logout</button>
+    <div className="home-employee-customercare">
+      <div className="title-bar">
+        <div className="left-section">
+          <h1>Shohojog Customer Care</h1>
+        </div>
+        <div className="right-section">
+          <button onClick={goToStatsPage}>Stats</button>
+          <button onClick={logoutEmployee}>Logout</button>
+        </div>
+      </div>
+      <div className="content">
+        <h1>Welcome, Employee!</h1>
+        <p>This is the home page for employees.</p>
+      </div>
     </div>
   );
 };
 
 export default Home_Employee_Customercare;
+

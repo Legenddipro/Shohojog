@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./EditInfo.css";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
 const EditInfo = () => {
   const { productId } = useParams();
@@ -51,9 +51,36 @@ const EditInfo = () => {
     }
   };
 
+  const handleSoftDelete = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/product/soft_delete_product/${productId}`, {
+        method: "POST",
+      });
+      if (response.ok) {
+        console.log("Product soft deleted successfully");
+        navigate("/seller-products");
+      } else {
+        throw new Error("Failed to soft delete product");
+      }
+    } catch (error) {
+      console.error("Error soft deleting product:", error);
+      setError("Failed to soft delete product");
+    }
+  };
+
   return (
     <div className="edit-info-container">
-      <h1>Edit Product Info</h1>
+      {/* Title Bar */}
+      <div className="title-bar">
+        <h1>Edit Product Info</h1>
+        <div className="options">
+          <Link to="/seller-products" className="go-back-option">
+            Go Back
+          </Link>
+        </div>
+      </div>
+
+      {/* Form */}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="price">Price:</label>
@@ -81,8 +108,13 @@ const EditInfo = () => {
             onChange={(e) => setStock(e.target.value)}
           />
         </div>
+        <div className="form-group">
+          <button type="submit">Update</button>
+          <button onClick={handleSoftDelete} className="delete-product-button">
+            Delete
+          </button>
+        </div>
         {error && <div className="error-message">{error}</div>}
-        <button type="submit">Update</button>
       </form>
     </div>
   );

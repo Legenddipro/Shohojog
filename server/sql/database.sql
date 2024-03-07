@@ -1,5 +1,19 @@
 CREATE DATABASE SHOHOJOG;
  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+ CREATE OR REPLACE FUNCTION set_product_status()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Set the status to 'available' after insert
+    NEW.status := 'available';
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER after_product_insert
+AFTER INSERT ON product
+FOR EACH ROW
+EXECUTE FUNCTION set_product_status();
+
  CREATE OR REPLACE FUNCTION insert_message_on_payment()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -101,6 +115,44 @@ CREATE TABLE Users (
    -- UNIQUE (First_Name, Middle_Name, Last_Name)
 );
 
+---- -- THE PROCEDURE TO INSERT INTO TOP_SELLED 
+CREATE OR REPLACE PROCEDURE INSERT_INTO_TOP_SELLED()
+LANGUAGE plpgsql
+AS $$
+DECLARE 
+    product_order_count INT;
+    product_name1 VARCHAR(255);
+    product_record RECORD;
+BEGIN
+    -- Clear existing data from the TOP_SELLED table
+    DELETE FROM TOP_SELLED;  
+    
+    -- Loop through each product in the "Contains" table
+    FOR product_record IN SELECT * FROM "Contains" LOOP
+        -- Calculate total quantity of orders for the current product
+        SELECT COALESCE(SUM(quantity), 0)
+        INTO product_order_count
+        FROM "Contains"
+        WHERE product_id = product_record.product_id;
+        
+        -- Retrieve the product name corresponding to the current product_id
+        SELECT Product_name 
+        INTO product_name1 
+        FROM Product 
+        WHERE Product_id = product_record.product_id;
+        
+        -- Insert the product details into the TOP_SELLED table
+        INSERT INTO TOP_SELLED (product_id, product_name, selled_quantity)
+        VALUES (product_record.product_id, product_name1, product_order_count);
+    END LOOP;
+END;
+$$;
+-- TO GET TOP SELLED products
+CREATE TABLE TOP_SELLED (
+product_id INT,
+product_name VARCHAR(255),
+selled_quantity INT,
+CONSTRAINT FK_CONTAINS_PRODUCT FOREIGN KEY (product_id) REFERENCES Product (product_id));
 
 CREATE TABLE Seller (
     user_id uuid PRIMARY KEY,
@@ -123,6 +175,22 @@ Category_id SERIAL PRIMARY KEY,
 Category_name VARCHAR(50)
 );
 
+CREATE OR REPLACE FUNCTION update_status()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.stock = 0 THEN
+        UPDATE Product
+        SET status = 'out of stock'
+        WHERE Product_id = NEW.Product_id;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER stock_update_trigger
+AFTER UPDATE OF stock ON Product
+FOR EACH ROW
+EXECUTE FUNCTION update_status();
 
 CREATE TABLE Product (
     Product_id SERIAL PRIMARY KEY,
@@ -133,7 +201,7 @@ CREATE TABLE Product (
     Seller_id uuid NOT NULL,
 		Category_id INT NOT NULL,
 		Stock INT ,
-    Seller_status VARCHAR(20) CHECK (Seller_status IN ('Available', 'Unavailable'));
+    status VARCHAR(255)
 		CONSTRAINT NO_NEGATIVE_price CHECK(Price >= 0),
 	--	CONSTRAINT STATUS_CHECK CHECK(Status is in ('upcoming','in stock','stock out')),
 	 CONSTRAINT NO_NEGATIVE_STOCK CHECK (

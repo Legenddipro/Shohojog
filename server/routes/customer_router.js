@@ -407,4 +407,4 @@ customer_router.get('/fetch_messages', async (req, res) => {
 
 module.exports = customer_router;
 
-module.exports = customer_router;
+

@@ -8,7 +8,7 @@ const All_products = () => {
   const getAllProducts = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/product/all_products"
+        "http://localhost:5000/product/all_products"//available products
       );
       const jsonData = await response.json();
       setProducts(jsonData);

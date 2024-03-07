@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
 import './Message_Seller.css'; // Import the CSS file for styling
 import Message_Seller_Card from './Message_Seller_Card'; // Import the Message_Seller_Card component
 
@@ -6,6 +7,7 @@ const Message_Seller = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   useEffect(() => {
     // Function to fetch seller orders from the backend
@@ -31,7 +33,7 @@ const Message_Seller = () => {
     const intervalId = setInterval(fetchSellerOrders, 30000);
     // Cleanup function to clear interval on component unmount
     return () => clearInterval(intervalId);
-  }, [orders]); // Empty dependency array to ensure the effect runs only once on mount
+  }, [orders]); // Re-run effect when orders change
 
   const handleConfirmation = async (orderid, pickupDate) => {
     try {
@@ -47,13 +49,31 @@ const Message_Seller = () => {
         throw new Error('Failed to confirm order');
       }
   
+      const responseData = await response.json();
+      console.log('Response Data:', responseData); // Log response data to verify
+  
+      // Check if any product status requires restocking
+      let restockingNeeded = false;
+      if (Array.isArray(responseData.updatedProducts)) {
+        restockingNeeded = responseData.updatedProducts.some(product => product.status === 'Restocking needed');
+      }
+  
+      if (restockingNeeded) {
+        console.log('Navigation triggered'); // Log navigation trigger
+        // Display message to restock the products
+        alert('Please restock the products of the order to confirm the order.');
+        // Redirect to edit info page for restocking
+        navigate(`/seller-products`);
+        return;
+      }
+  
       console.log('Order confirmed successfully');
     } catch (error) {
       console.error('Error confirming order:', error);
-      // Handle error if necessary
     }
   };
-
+  
+  
   if (loading) {
     return <div>Loading...</div>; // Show loading state while fetching data
   }

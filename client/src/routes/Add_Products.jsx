@@ -1,6 +1,8 @@
-// Add_Products.jsx
+//Add_Products.jsx
 import React, { useState } from "react";
+import { Link } from 'react-router-dom';
 import "./Add_Products.css";
+
 const Add_Products = () => {
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
@@ -45,28 +47,37 @@ const Add_Products = () => {
 
   return (
     <div className="add-products-container">
-      <h1>Add Product</h1>
-      <form onSubmit={handleSubmit}>
-        <label>Product Name:</label>
-        <input type="text" value={productName} onChange={(e) => setProductName(e.target.value)} required />
+      {/* Title Bar */}
+      <div className="title-bar">
+        <h1 className="title">Shohojog</h1>
+        <Link to="/seller-products" className="go-back-button">Go Back</Link>
+      </div>
 
-        <label>Price:</label>
-        <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
+      {/* Form */}
+      <div className="form-container">
+        <h2>Add Product</h2>
+        <form onSubmit={handleSubmit}>
+          <label>Product Name:</label>
+          <input type="text" value={productName} onChange={(e) => setProductName(e.target.value)} required />
 
-        <label>Category:</label>
-        <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} required />
+          <label>Price:</label>
+          <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
 
-        <label>Features:</label>
-        <textarea value={features} onChange={(e) => setFeatures(e.target.value)} required />
+          <label>Category:</label>
+          <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} required />
 
-        <label>Category ID:</label> {/* New input field for category_id */}
-        <input type="number" value={categoryId} onChange={(e) => setCategoryId(e.target.value)} required />
+          <label>Features:</label>
+          <textarea value={features} onChange={(e) => setFeatures(e.target.value)} required />
 
-        <label>Stock:</label>
-        <input type="number" value={stock} onChange={(e) => setStock(e.target.value)} required />
+          <label>Category ID:</label> {/* New input field for category_id */}
+          <input type="number" value={categoryId} onChange={(e) => setCategoryId(e.target.value)} required />
 
-        <button type="submit">Add Product</button>
-      </form>
+          <label>Stock:</label>
+          <input type="number" value={stock} onChange={(e) => setStock(e.target.value)} required />
+
+          <button type="submit">Add Product</button>
+        </form>
+      </div>
     </div>
   );
 };

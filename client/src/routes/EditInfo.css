@@ -1,4 +1,46 @@
 /* EditInfo.css */
+/* EditInfo.css */
+
+/* EditInfo.css */
+
+.delete-product-button {
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.delete-product-button:hover {
+  background-color: #bb2d3b;
+}
+
+
+.title-bar {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title-bar h1 {
+  margin: 0;
+}
+
+.go-back-option {
+  color: #fff;
+  text-decoration: none;
+}
+
+.go-back-option:hover {
+  text-decoration: underline;
+}
+
 .edit-info-container {
     margin: 20px;
     padding: 20px;

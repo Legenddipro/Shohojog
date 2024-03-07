@@ -1,27 +1,100 @@
 /* SearchPage.css */
+
+.title-bar {
+  background-color: #f0f0f0;
+  padding: 10px;
+  margin-bottom: 10px; /* Add margin-bottom to create distance */
+}
+
+.title-section {
+  display: inline-block;
+}
+
+.title {
+  margin: 0;
+}
+
+.navigation {
+  float: right;
+}
+
+.go-back-button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 12px;
+  text-decoration: none;
+  border-radius: 5px;
+/* Add a new line before closing brace for better readability */
+}
+
+
+.go-back-button:hover {
+  background-color: #0056b3;
+}
+
 .search-container {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .search-input {
-    padding: 8px;
-    width: 300px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .search-button {
-    padding: 8px 20px;
-    margin-left: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .search-button:hover {
-    background-color: #0056b3;
-  }
-  
+  padding: 20px;
+  padding-right: 190px;
+  margin-bottom: 20px; /* Add margin-bottom to create distance */
+  text-align: center;
+}
+
+.search-input,
+.price-input {
+  margin-right: 10px; /* Add margin-right to separate elements */
+  margin-bottom: 10px; /* Add margin-bottom to create distance */
+}
+
+.search-input {
+  padding: 10px;
+  width: 90%; /* Adjust width to occupy more space */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px; /* Increase font size for better visibility */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
+}
+
+.price-input {
+  padding: 6px;
+  width: 30px; /* Adjust width for smaller input */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px; /* Increase font size for better visibility */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+}
+
+.price-filter {
+  display: inline-block;
+  position: relative;
+  padding: 8px 15px; /* Add padding for better spacing */
+  background-color: #007bff; /* Set background color */
+  color: #fff; /* Set text color */
+  border-radius: 8px; /* Add border radius for rounded corners */
+  font-size: 14px; /* Decrease font size for better fit */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
+}
+
+.arrow-up,
+.arrow-down {
+  position: absolute;
+  right: 10px; /* Adjust right position for better alignment */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+}

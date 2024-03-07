@@ -41,9 +41,10 @@ const Cart = () => {
       fetchCartProducts(); // Fetch updated products after increasing quantity
     } catch (error) {
       console.error('Error increasing quantity:', error);
+      alert('Error increasing quantity');
     }
   };  
-
+  
   const decreaseQuantity = async (orderId, productId, oldQuantity) => {
     try {
       const newQuantity = oldQuantity - 1; // Decrease quantity by 1
@@ -65,8 +66,10 @@ const Cart = () => {
       }
     } catch (error) {
       console.error('Error decreasing quantity:', error);
+      alert('Error decreasing quantity');
     }
   };
+  
 
   const removeProductFromCart = async (orderId, productId) => {
     try {

@@ -1,8 +1,8 @@
-// export default SearchProducts;
 import React, { Fragment, useEffect, useState } from "react";
-//import "./AllProducts.css"; // Import CSS file for styling
+import { Link } from "react-router-dom";
 import Card_seller from "./Card_seller";
-import  './SearchPage.css';
+import './SearchPage.css';
+
 const SearchProducts = () => {
   const [products, setProducts] = useState([]);
   const [productName, setProductName] = useState("");
@@ -37,32 +37,56 @@ const SearchProducts = () => {
 
   return (
     <Fragment>
+      <div className="title-bar">
+        <div className="title-section">
+          <h1 className="title">Search Products</h1>
+        </div>
+        <div className="navigation">
+          <Link to="/Home_seller" className="go-back-button">Go Back</Link>
+        </div>
+      </div>
+
       <div className="search-container">
         <input
           type="text"
           placeholder="Search by name"
           value={productName}
           onChange={(e) => setProductName(e.target.value)}
+          className="search-input"
         />
         <input
           type="text"
           placeholder="Search by category"
           value={productCategory}
           onChange={(e) => setProductCategory(e.target.value)}
+          className="search-input"
         />
-        <input
-          type="number"
-          placeholder="Min price"
-          value={minPrice}
-          onChange={(e) => setMinPrice(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Max price"
-          value={maxPrice}
-          onChange={(e) => setMaxPrice(e.target.value)}
-        />
-        <button onClick={handleSearch}>Search</button>
+        <button onClick={handleSearch} className="search-button">Search</button>
+      </div>
+
+      <div className="filters-container">
+        <div className="price-filter">
+          <input
+            type="number"
+            placeholder="Min price"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            className="price-input"
+          />
+          <span className="arrow-up"></span>
+          <span className="arrow-down"></span>
+        </div>
+        <div className="price-filter">
+          <input
+            type="number"
+            placeholder="Max price"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            className="price-input"
+          />
+          <span className="arrow-up"></span>
+          <span className="arrow-down"></span>
+        </div>
       </div>
 
       <div className="products-container">
@@ -82,4 +106,3 @@ const SearchProducts = () => {
 };
 
 export default SearchProducts;
-
