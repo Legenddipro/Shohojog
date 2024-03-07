@@ -1,11 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import './Customercare_Stats.css'; // Import CSS file for styling
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import "./Customercare_Stats.css"; // Import CSS file for styling
 
 const Customercare_Stats = () => {
   const [topSoldProducts, setTopSoldProducts] = useState([]);
   const [showTopSoldProducts, setShowTopSoldProducts] = useState(false);
+  const [customerHistory, setCustomerHistory] = useState([]);
+  const [showCustomerHistory, setShowCustomerHistory] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [topSoldProductsBetweenDates, setTopSoldProductsBetweenDates] = useState([]);
+  const [showTopSoldProductsBetweenDates, setShowTopSoldProductsBetweenDates] = useState(false);
+  const [startDate_seller, setStartDate_seller] = useState('');
+  const [endDate_seller, setEndDate_seller] = useState('');
+  const [topSellerBetweenDates, setTopSellerBetweenDates] = useState([]);
+  const [showTopSellerBetweenDates, setShowTopSellerBetweenDates] = useState(false);
 
   useEffect(() => {
     fetchTopSoldProducts();
@@ -13,36 +23,101 @@ const Customercare_Stats = () => {
 
   const fetchTopSoldProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/customer_care/top_selled');
+      const response = await axios.get(
+        "http://localhost:5000/customer_care/top_selled"
+      );
       setTopSoldProducts(response.data);
+      setShowTopSoldProducts(!showTopSoldProducts);
     } catch (error) {
-      console.error('Error fetching top sold products:', error);
+      console.error("Error fetching top sold products:", error);
     }
   };
 
-  const toggleTopSoldProducts = () => {
-    setShowTopSoldProducts(!showTopSoldProducts);
+  const fetchCustomerHistory = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/customer_care/customer_order_history"
+      );
+      setCustomerHistory(response.data);
+      setShowCustomerHistory(!showCustomerHistory); // Toggle customer history display
+    } catch (error) {
+      console.error("Error fetching customer history:", error);
+    }
+  };
+
+  const fetchTopSoldBetweenDates = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/customer_care/top_sold_between_dates",
+        { start_date: startDate, end_date: endDate }
+      );
+      setTopSoldProductsBetweenDates(response.data);
+      setShowTopSoldProductsBetweenDates(!showTopSoldProductsBetweenDates); // Show the top sold products between dates
+    } catch (error) {
+      console.error("Error fetching top sold products between dates:", error);
+    }
+  };
+
+  const fetchTopSellerBetweenDates = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/customer_care/top_seller_btwn_dates",
+        { start_date: startDate_seller, end_date: endDate_seller }
+      );
+      setTopSellerBetweenDates(response.data);
+      setShowTopSellerBetweenDates(!showTopSellerBetweenDates); // Show the top sold products between dates
+    } catch (error) {
+      console.error("Error fetching top seller between dates:", error);
+    }
   };
 
   return (
     <div className="customercare-stats-container">
       {/* Sidebar with Navigation Buttons */}
       <div className="sidebar">
-        <button className="nav-button" onClick={toggleTopSoldProducts}>
-          {showTopSoldProducts ? 'Hide Top Sold Products' : 'Show Top Sold Products'}
+        <button className="nav-button" onClick={fetchTopSoldProducts}>
+          {showTopSoldProducts
+            ? "Hide Top Sold Products"
+            : "Show Top Sold Products"}
         </button>
-        <Link to="/customer_history" className="nav-button">
-          Search Customer History
-        </Link>
-        <Link to="/top_products" className="nav-button">
-          View Top Products
-        </Link>
+        <button className="nav-button" onClick={fetchCustomerHistory}>
+          {showCustomerHistory
+            ? "Hide Top Customer"
+            : "See Top Customer"}
+        </button>
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+        />
+        <button className="nav-button" onClick={fetchTopSoldBetweenDates}>
+        {showTopSoldProductsBetweenDates
+            ? "Hide Products"
+            : "Show Products"}
+        </button>
         <Link to="/top_customers" className="nav-button">
           Top Customers
         </Link>
-        <Link to="/top_sellers" className="nav-button">
-          Seller with the Most Profit
-        </Link>
+        <input
+          type="date"
+          value={startDate_seller}
+          onChange={(e) => setStartDate_seller(e.target.value)}
+        />
+        <input
+          type="date"
+          value={endDate_seller}
+          onChange={(e) => setEndDate_seller(e.target.value)}
+        />
+        <button className="nav-button" onClick={fetchTopSellerBetweenDates}>
+        {showTopSellerBetweenDates
+            ? "Hide Seller"
+            : "Show Seller"}
+        </button>
       </div>
 
       {/* Content Section */}
@@ -62,7 +137,7 @@ const Customercare_Stats = () => {
 
         {showTopSoldProducts && (
           <div className="top-products-section">
-            <h2>Top Sold Products</h2>
+            <h2>All-Time Top Sold Products</h2>
             <table>
               <thead>
                 <tr>
@@ -83,6 +158,74 @@ const Customercare_Stats = () => {
             </table>
           </div>
         )}
+
+        {showTopSoldProductsBetweenDates && (
+          <div className="top-products-between-dates-section">
+            <h2>Top Sold Products Between Dates</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Product ID</th>
+                  <th>Product Name</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                {topSoldProductsBetweenDates.map((product) => (
+                  <tr key={product.product_id}>
+                    <td>{product.product_id}</td>
+                    <td>{product.product_name1}</td>
+                    <td>{product.selled_quantity}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {showCustomerHistory && customerHistory.length > 0 && (
+          <div className="customer-history-section">
+            <h2>Top Customers</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Customer Name</th>
+                  <th>Total Products Ordered</th>
+                </tr>
+              </thead>
+              <tbody>
+                {customerHistory.map((customer) => (
+                  <tr key={customer.user_id}>
+                    <td>{customer.customer_name}</td>
+                    <td>{customer.total_products_ordered}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {showTopSellerBetweenDates && (
+          <div className="top-seller-between-dates-section">
+            <h2>Top Seller Between Dates</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Seller Name</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                {topSellerBetweenDates.map((seller) => (
+                  <tr key={seller.seller_id}>
+                    <td>{seller.seller_name}</td>
+                    <td>{seller.sold_quantity}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
         {/* Add Bar Graph here if desired */}
       </div>
     </div>
@@ -90,5 +233,3 @@ const Customercare_Stats = () => {
 };
 
 export default Customercare_Stats;
-
-
