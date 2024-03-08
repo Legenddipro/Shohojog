@@ -100,9 +100,7 @@ const Customercare_Stats = () => {
             ? "Hide Products"
             : "Show Products"}
         </button>
-        <Link to="/top_customers" className="nav-button">
-          Top Customers
-        </Link>
+        
         <input
           type="date"
           value={startDate_seller}

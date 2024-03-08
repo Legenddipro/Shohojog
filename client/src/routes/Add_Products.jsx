@@ -1,15 +1,14 @@
-//Add_Products.jsx
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import "./Add_Products.css";
 
 const Add_Products = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [features, setFeatures] = useState("");
   const [stock, setStock] = useState("");
-  const [categoryId, setCategoryId] = useState(""); // State for category_id
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +22,6 @@ const Add_Products = () => {
       product_category: category,
       product_features: features,
       seller_id: sellerId,
-      category_id: parseInt(categoryId), // Parse category ID to integer
       stock: parseInt(stock) // Parse stock to integer
     };
 
@@ -38,7 +36,8 @@ const Add_Products = () => {
 
       const data = await response.json();
       console.log(data); // Log response from backend
-      // Optionally, handle success message or redirect to another page
+      // Redirect to seller-products page upon successful submission
+      navigate('/seller-products');
     } catch (error) {
       console.error('Error:', error);
       // Optionally, handle error message
@@ -68,9 +67,6 @@ const Add_Products = () => {
 
           <label>Features:</label>
           <textarea value={features} onChange={(e) => setFeatures(e.target.value)} required />
-
-          <label>Category ID:</label> {/* New input field for category_id */}
-          <input type="number" value={categoryId} onChange={(e) => setCategoryId(e.target.value)} required />
 
           <label>Stock:</label>
           <input type="number" value={stock} onChange={(e) => setStock(e.target.value)} required />

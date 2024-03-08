@@ -91,18 +91,18 @@ product_router.put('/edit_product/:id', async (req, res) => {
 //ADD PRODUCT BY PRACHU.......................................
 // Route to add a new product
 product_router.post('/add_product', async (req, res) => {
-  const { product_name, price, product_category, product_features, seller_id, category_id, stock } = req.body;
+  const { product_name, price, product_category, product_features, seller_id, stock } = req.body;
 
   try {
     // Perform input data validation if required
 
     // Insert the new product into the database
     const query = `
-      INSERT INTO product (product_name, price, product_category, product_features, seller_id, category_id, stock)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO product (product_name, price, product_category, product_features, seller_id, stock)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
     `;
-    const values = [product_name, price, product_category, product_features, seller_id, category_id, stock];
+    const values = [product_name, price, product_category, product_features, seller_id, stock];
     const newProduct = await pool.query(query, values);
 
     res.status(201).json(newProduct.rows[0]); // Return the newly added product
