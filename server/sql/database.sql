@@ -271,6 +271,7 @@ CREATE TABLE "Order" (
     delivery_date DATE,
     pickup_date DATE,
     courier_employee_id uuid ,	
+    Rated BOOLEAN,
      CONSTRAINT fk_courier_employee FOREIGN KEY (courier_employee_id) REFERENCES Courier_Service(service_id),
 		CONSTRAINT customer_order_fk FOREIGN KEY (customer_id) REFERENCES Customer (user_id),
     CONSTRAINT fk_courier_employee FOREIGN KEY (courier_employee_id) REFERENCES Courier_Service(service_id)
@@ -310,13 +311,16 @@ CREATE TABLE Return_Order (
 CREATE TABLE Contains (
     order_id INT,
     product_id INT,
-    CONSTRAINT FK_CONTAINS_ORDER FOREIGN KEY (order_id) REFERENCES "Order" (order_id),
+    CONSTRAINT fk_contains_order FOREIGN KEY (order_id) REFERENCES "Order"(order_id) ON DELETE CASCADE;
     CONSTRAINT FK_CONTAINS_PRODUCT FOREIGN KEY (product_id) REFERENCES Product (product_id),
     CONSTRAINT PK_CONTAINS PRIMARY KEY (order_id, product_id),
     quantity INT,
     price DECIMAL(10, 2),
     CONSTRAINT NO_NEGATIVE_QUANTITY CHECK(quantity > 0),
     CONSTRAINT NO_NEGATIVE_PRICE CHECK(price >= 0)
+    review TEXT,
+    rating DECIMAL(10, 2),
+    review_time TIMESTAMP;
 );
 
 
@@ -330,3 +334,22 @@ customer_id uuid,
     comment_time TIMESTAMP,
     rating DECIMAL(10, 2)
 );
+
+-- add a CONSTRAINT named rating cannot be  no more than 10 ....................... by Prachu........................		 
+ CREATE TABLE Review (
+    customer_id uuid,
+    product_id INT,
+    CONSTRAINT FK_Review_Customer FOREIGN KEY (customer_id) REFERENCES Customer(user_id),
+    CONSTRAINT FK_Review_Product FOREIGN KEY (product_id) REFERENCES Product(product_id),
+    CONSTRAINT PK_REVIEW PRIMARY KEY (customer_id, product_id),
+    comments TEXT,
+    comment_time TIMESTAMP,
+    rating DECIMAL(10, 2),
+    CONSTRAINT no_more_than_10 CHECK (rating <= 10)
+);
+-- to add into review table ..........................................
+INSERT INTO Review (customer_id, product_id, comments, comment_time, rating)
+VALUES 
+('6487831e-30f4-44fc-8ac3-87919b1a10d3', 4, 'Great product!', CURRENT_TIMESTAMP, 9.5),
+('6487831e-30f4-44fc-8ac3-87919b1a10d3', 3, 'Good service!', CURRENT_TIMESTAMP, 8.7),
+('6487831e-30f4-44fc-8ac3-87919b1a10d3', 13, 'Average experience', CURRENT_TIMESTAMP, 5.2);

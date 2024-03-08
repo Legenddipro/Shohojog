@@ -27,6 +27,7 @@ import Message_Employee from "./routes/Message_Employee";
 import Courier_Delivery_History from "./routes/Courier_Delivery_History";
 import Message_Customer from "./routes/Message_Customer";
 import Customercare_Stats from "./routes/Customercare_Stats";
+import Customer_History from "./routes/Customer_History";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -152,6 +153,7 @@ const App = () => {
           <Route path="/history" element={<Courier_Delivery_History />} />
           <Route path="/messaging" element={<Message_Customer />} />
           <Route path="/stats" element={<Customercare_Stats />} />
+          <Route path="/customer_history" element={<Customer_History />} />
         </Routes>
       </Router>
     </Fragment>

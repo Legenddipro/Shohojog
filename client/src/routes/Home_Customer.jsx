@@ -1,7 +1,6 @@
-// Home_Customer.jsx
-
+//Home-Customer.jsx
 import React, { Fragment, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate
 import All_products_Customer from './All_products_Customer';
 import Cart from './Cart';
 import './Home_Customer.css'; 
@@ -36,6 +35,10 @@ const Home_Customer = ({ setAuth }) => {
           <button className="option cart-option" onClick={toggleCart}>
             <span className="cart-icon">🛒</span> My Cart
           </button> {/* Toggle cart visibility */}
+          {/* Button to navigate to Customer History */}
+          <Link to="/customer_history" className="option">
+            History
+          </Link>
           <button className="option logout-option" onClick={(e) => logout(e)}>Log out</button>
         </div>
       </div>
@@ -48,5 +51,7 @@ const Home_Customer = ({ setAuth }) => {
     </Fragment>
   )
 };
+
 export default Home_Customer;
+
 

@@ -30,7 +30,7 @@ router.post("/register", validInfo, async (req, res) => {
       contact_no,
       e_mail,
       location_pst_code,
-      street, // Additional fields for location
+      street, 
       area,
       town,
       user_type,
@@ -40,7 +40,7 @@ router.post("/register", validInfo, async (req, res) => {
       office_address,
       salary,
       employee_type,
-      delivery_pst_code, // Added delivery_pst_code
+      delivery_pst_code, 
       vehicle_type,
       company_name
     } = req.body;

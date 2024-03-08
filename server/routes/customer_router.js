@@ -241,10 +241,6 @@ customer_router.post("/remove_from_cart", async (req, res) => {
         "DELETE FROM Contains WHERE order_id = $1 AND product_id = $2";
       await pool.query(deleteProductQuery, [order_id, product_id]);
     } else {
-      // If there's only one entry, delete both from Contains and Order table
-      const deleteContainsQuery = "DELETE FROM Contains WHERE order_id = $1";
-      await pool.query(deleteContainsQuery, [order_id]);
-
       const deleteOrderQuery = 'DELETE FROM "Order" WHERE order_id = $1';
       await pool.query(deleteOrderQuery, [order_id]);
     }
@@ -404,6 +400,111 @@ customer_router.get('/fetch_messages', async (req, res) => {
       res.status(500).json({ error: "An unexpected error occurred" });
   }
 });
+
+// Backend function to find unrated orders
+customer_router.get("/unrated_orders/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Fetch unrated orders for the user
+    const query = `
+    SELECT order_id, order_date, payment_date 
+    FROM "Order"
+    WHERE customer_id = $1 AND Rated IS false and ispaid is true
+    order by order_id ;
+    `;
+
+    const { rows } = await pool.query(query, [userId]);
+    res.json(rows);
+  } catch (error) {
+    console.error("Error fetching unrated orders:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
+  }
+});
+
+// Backend function to find rated orders
+customer_router.get("/rated_orders/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Fetch rated orders for the user
+    const query = `
+      SELECT order_id, order_date, payment_date
+      FROM "Order"
+      WHERE customer_id = $1 AND Rated IS TRUE and ispaid is true;
+    `;
+
+    const { rows } = await pool.query(query, [userId]);
+    res.json(rows);
+  } catch (error) {
+    console.error("Error fetching rated orders:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
+  }
+});
+
+customer_router.get("/order_products/:orderId", async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+
+    // Fetch products associated with the provided order ID
+    const query = `
+      SELECT 
+        Product.product_id,
+        Product.product_name,
+        Product.product_category,
+        Contains.quantity,
+        Contains.price,
+        Contains.review,
+        Contains.rating,
+        Contains.review_time,
+        "Order".order_id,
+        "Order".payment_date,
+        "Order".order_date
+      FROM 
+        Contains
+      INNER JOIN 
+        Product ON Contains.product_id = Product.product_id
+      INNER JOIN
+        "Order" ON Contains.order_id = "Order".order_id
+      WHERE 
+        Contains.order_id = $1;
+    `;
+
+    const { rows } = await pool.query(query, [orderId]);
+    res.json(rows);
+  } catch (error) {
+    console.error("Error fetching products for order:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
+  }
+});
+
+// Define your route handler for posting order reviews
+customer_router.post("/order_review", async (req, res) => {
+  try {
+    const { orderId, productId, review, rating } = req.body;
+
+    // Set review_time as the current system date
+    const reviewTime = new Date().toISOString();
+
+    // Update the review, rating, and review_time for the specified product in the order
+    const query = `
+      UPDATE Contains
+      SET review = $1, rating = $2, review_time = $3
+      WHERE order_id = $4 AND product_id = $5;
+    `;
+
+    await pool.query(query, [review, rating, reviewTime, orderId, productId]);
+
+    // Call the update_order_rating function after updating the review and rating
+    await pool.query('SELECT update_order_rating($1)', [orderId]);
+
+    res.status(200).json({ message: "Review and rating posted successfully" });
+  } catch (error) {
+    console.error("Error posting review and rating:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
+  }
+});
+
 
 module.exports = customer_router;
 
