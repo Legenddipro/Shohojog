@@ -200,6 +200,7 @@ CREATE TABLE Product (
     Product_features TEXT,
     Seller_id uuid NOT NULL,
 		Category_id INT NOT NULL,
+        overall_rating DECIMAL(10, 2),
 		Stock INT ,
     status VARCHAR(255)
 		CONSTRAINT NO_NEGATIVE_price CHECK(Price >= 0),
@@ -290,20 +291,12 @@ CREATE TABLE Return_Order (
     return_date DATE,
     status VARCHAR(50),
     complaint TEXT,
-		approval_time TIMESTAMP,
-		delivery_time TIMESTAMP,
+	approval_time TIMESTAMP,
     order_id INT,
-		customer_care_id uuid,
-		courier_service_id uuid,
-		CONSTRAINT FK_RETURN_ORDER  FOREIGN KEY (order_id) REFERENCES "Order"(order_id),
-			CONSTRAINT FK_COURIER_RETURN_ORDER  FOREIGN KEY (courier_service_id) REFERENCES Courier_Service(service_id),
-		CONSTRAINT FK_RETURN_customer_care  FOREIGN KEY (customer_care_id) REFERENCES Customer_Care(service_id),
-		CONSTRAINT check_RETURN_STATUS CHECK (status in ('approved','disapproved')),
-		CONSTRAINT check_RETURN_courier CHECK ((status = 'disapproved' AND courier_service_id IS NULL AND delivery_time IS NULL) OR (courier_service_id IS NOT  NULL AND delivery_time IS NOT NULL) )
-		
-		--CONSTRAINT STATUS_CHECK CHECK(Status is in ('upcoming','in stock','stock out')),
-  -- CONSTRAINT FK_RETURN_ORDER  FOREIGN KEY (order_id) REFERENCES "Order"(order_id)
-	-- CONSTRAINT FK_RETURN_customer_care  FOREIGN KEY (customer_care_id) REFERENCES "Customer_Care"(employee_id);
+	customer_care_id uuid,
+	CONSTRAINT FK_RETURN_ORDER  FOREIGN KEY (order_id) REFERENCES "Order"(order_id),
+	CONSTRAINT FK_RETURN_customer_care  FOREIGN KEY (customer_care_id) REFERENCES Customer_Care(service_id),
+	CONSTRAINT check_RETURN_STATUS CHECK (status IN ('approved', 'disapproved', 'pending'));
 );
 
 

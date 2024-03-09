@@ -505,6 +505,37 @@ customer_router.post("/order_review", async (req, res) => {
   }
 });
 
+customer_router.post("/return-order/:orderId", async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    const { complaint } = req.body;
+
+    // Insert return order into database with status 'pending'
+    const insertReturnOrderQuery = `
+      INSERT INTO Return_Order (order_id, status, complaint)
+      VALUES ($1, 'pending', $2)
+    `;
+    await pool.query(insertReturnOrderQuery, [orderId, complaint]);
+
+    res.status(200).json({ message: "Return order added successfully" });
+  } catch (error) {
+    console.error("Error adding return order:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+customer_router.get("/get_return_orders", async (req, res) => {
+  try {
+    const query = `
+      SELECT * FROM Return_Order
+    `;
+    const { rows } = await pool.query(query);
+    res.json(rows);
+  } catch (error) {
+    console.error("Error fetching return orders:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 module.exports = customer_router;
 

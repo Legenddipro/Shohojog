@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home_Employee_Customercare.css'; // Import CSS file for styling
+import PendingReturnOrdersPanel from './PendingReturnOrdersPanel'; // Import the PendingReturnOrdersPanel component
+import ReturnOrdersHistory from './ReturnOrdersHistory';
 
 const Home_Employee_Customercare = ({ setAuth }) => {
   const navigate = useNavigate();
@@ -34,12 +36,11 @@ const Home_Employee_Customercare = ({ setAuth }) => {
         </div>
       </div>
       <div className="content">
-        <h1>Welcome, Employee!</h1>
-        <p>This is the home page for employees.</p>
+        <PendingReturnOrdersPanel />
+        <ReturnOrdersHistory />
       </div>
     </div>
   );
 };
 
 export default Home_Employee_Customercare;
-

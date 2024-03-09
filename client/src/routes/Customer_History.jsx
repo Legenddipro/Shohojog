@@ -10,6 +10,10 @@ const Customer_History = () => {
   const [orderDetails, setOrderDetails] = useState([]);
   const [reviewInputs, setReviewInputs] = useState({});
   const [ratingInputs, setRatingInputs] = useState({});
+  const [complaintFormVisible, setComplaintFormVisible] = useState(false);
+  const [complaint, setComplaint] = useState("");
+  const [complaintOrderId, setComplaintOrderId] = useState(""); // New state to hold order ID
+  const [returnOrders, setReturnOrders] = useState([]); // State to hold return orders
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +38,16 @@ const Customer_History = () => {
       })
       .catch((error) => {
         console.error("Error fetching rated orders:", error);
+      });
+
+    // Fetch return orders
+    axios
+      .get(`http://localhost:5000/customer/get_return_orders`)
+      .then((response) => {
+        setReturnOrders(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching return orders:", error);
       });
   }, []);
 
@@ -63,6 +77,8 @@ const Customer_History = () => {
       .get(`http://localhost:5000/customer/order_products/${orderId}`)
       .then((response) => {
         setOrderDetails(response.data);
+        console.log("Order details:", response.data);
+        console.log("Order ID:", response.data[0].order_id);
       })
       .catch((error) => {
         console.error("Error fetching order details:", error);
@@ -122,6 +138,41 @@ const Customer_History = () => {
       });
   };
 
+  const handleComplaintChange = (event) => {
+    setComplaint(event.target.value);
+  };
+
+  const handleComplaintSubmit = () => {
+    console.log("Complaint submitted:", complaint);
+    axios
+      .post(`http://localhost:5000/customer/return-order/${complaintOrderId}`, {
+        complaint: complaint
+      })
+      .then((response) => {
+        console.log(response.data);
+        setComplaintFormVisible(false);
+      })
+      .catch((error) => {
+        console.error("Error submitting complaint:", error);
+      });
+  };
+
+  const handleComplaintCancel = () => {
+    // Cancel the complaint form
+    setComplaintFormVisible(false);
+  };
+
+  const showComplaintForm = (orderId) => {
+    // Show the complaint form
+    setComplaintFormVisible(true);
+    setComplaintOrderId(orderId); // Hold onto the orderId for submission
+  };
+
+  // Function to check if the order is already present in the return orders
+  const isOrderInReturnOrders = (orderId) => {
+    return returnOrders.some((order) => order.order_id === orderId);
+  };
+
   return (
     <div>
       <div className="title-bar">
@@ -158,6 +209,14 @@ const Customer_History = () => {
                     <td>
                       <button onClick={() => rateOrder(order.order_id)}>
                         Rate Us
+                      </button>
+                      <button
+                        onClick={() =>
+                          showComplaintForm(order.order_id)
+                        }
+                        disabled={isOrderInReturnOrders(order.order_id)} // Disable if order is already in return orders
+                      >
+                        Return Order
                       </button>
                     </td>
                   </tr>
@@ -236,7 +295,12 @@ const Customer_History = () => {
                         type="text"
                         placeholder="Enter review"
                         value={reviewInputs[product.product_id] || ""}
-                        onChange={(e) => handleReviewChange(product.product_id, e.target.value)}
+                        onChange={(e) =>
+                          handleReviewChange(
+                            product.product_id,
+                            e.target.value
+                          )
+                        }
                       />
                     </td>
                   )}
@@ -244,7 +308,12 @@ const Customer_History = () => {
                     <td>
                       <select
                         value={ratingInputs[product.product_id] || ""}
-                        onChange={(e) => handleRatingChange(product.product_id, parseInt(e.target.value))}
+                        onChange={(e) =>
+                          handleRatingChange(
+                            product.product_id,
+                            parseInt(e.target.value)
+                          )
+                        }
                       >
                         <option value="">Rate Us (1 to 10)</option>
                         {[...Array(10)].map((_, index) => (
@@ -269,11 +338,34 @@ const Customer_History = () => {
                     >
                       Rate Product
                     </button>
+                    <button
+                      onClick={() =>
+                        showComplaintForm(product.order_id)
+                      }
+                      disabled={isOrderInReturnOrders(product.order_id)} // Disable if order is already in return orders
+                    >
+                      Return Order
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {complaintFormVisible && (
+        <div className="complaint-form">
+          <h2>Return Order Complaint Form</h2>
+          <textarea
+            placeholder="Enter your complaint here..."
+            value={complaint}
+            onChange={handleComplaintChange}
+          ></textarea>
+          <div>
+            <button onClick={handleComplaintSubmit}>Submit</button>
+            <button onClick={handleComplaintCancel}>Cancel</button>
+          </div>
         </div>
       )}
     </div>
