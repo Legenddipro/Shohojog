@@ -1,89 +1,6 @@
 CREATE DATABASE SHOHOJOG;
  CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
- CREATE OR REPLACE FUNCTION set_product_status()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Set the status to 'available' after insert
-    NEW.status := 'available';
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER after_product_insert
-AFTER INSERT ON product
-FOR EACH ROW
-EXECUTE FUNCTION set_product_status();
-
- CREATE OR REPLACE FUNCTION insert_message_on_payment()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF NEW.isPaid = true THEN
-        INSERT INTO Message (sender_id, receiver_id, message_time, message)
-        VALUES (
-            (SELECT user_id FROM Users WHERE user_type = 'Admin'),
-            NEW.customer_id,
-            CURRENT_TIMESTAMP,
-            'Thanks for buying our product. Please give a review or message us for return.'
-        );
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER on_payment_update
-AFTER UPDATE OF isPaid ON "Order"
-FOR EACH ROW
-EXECUTE FUNCTION insert_message_on_payment();
-CREATE OR REPLACE FUNCTION insert_message()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF NEW.delivery_status IS NULL THEN
-        INSERT INTO Message (sender_id, receiver_id, message_time, message)
-        VALUES ((SELECT user_id FROM Users WHERE user_type = 'Admin'), NEW.customer_id, NOW(), 'Your Products are waiting in the cart. Buy them before stock runs out');
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER insert_message_trigger
-AFTER INSERT ON "Order"
-FOR EACH ROW
-EXECUTE FUNCTION insert_message();
-CREATE OR REPLACE PROCEDURE insert_message_procedure(customer_id_param UUID)
-LANGUAGE SQL
-AS $$
-INSERT INTO Message (sender_id, receiver_id, message_time, message)
-SELECT
-    (SELECT user_id FROM Users WHERE user_type = 'Admin'),
-    customer_id_param,
-    NOW(),
-    'Your Products order is sent to the Seller. Waiting for the drop-off'
-FROM
-    "Order"
-WHERE
-    delivery_status = 'seller unconfirmed';
-$$;
-
-CREATE OR REPLACE FUNCTION before_insert_location_full()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Check if the new pst_code exists in the location table
-    IF NOT EXISTS (SELECT 1 FROM location WHERE pst_code = NEW.pst_code) THEN
-        -- Insert the new pst_code into the location table
-        INSERT INTO location (pst_code) VALUES (NEW.pst_code);
-    END IF;
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trg_before_insert_location_full
-BEFORE INSERT ON location_full
-FOR EACH ROW
-EXECUTE FUNCTION before_insert_location_full();
-
-
-
+ 
 CREATE TABLE location_full (
     location_id SERIAL PRIMARY KEY,
     pst_code VARCHAR(10) ,
@@ -115,38 +32,7 @@ CREATE TABLE Users (
    -- UNIQUE (First_Name, Middle_Name, Last_Name)
 );
 
----- -- THE PROCEDURE TO INSERT INTO TOP_SELLED 
-CREATE OR REPLACE PROCEDURE INSERT_INTO_TOP_SELLED()
-LANGUAGE plpgsql
-AS $$
-DECLARE 
-    product_order_count INT;
-    product_name1 VARCHAR(255);
-    product_record RECORD;
-BEGIN
-    -- Clear existing data from the TOP_SELLED table
-    DELETE FROM TOP_SELLED;  
-    
-    -- Loop through each product in the "Contains" table
-    FOR product_record IN SELECT * FROM "Contains" LOOP
-        -- Calculate total quantity of orders for the current product
-        SELECT COALESCE(SUM(quantity), 0)
-        INTO product_order_count
-        FROM "Contains"
-        WHERE product_id = product_record.product_id;
-        
-        -- Retrieve the product name corresponding to the current product_id
-        SELECT Product_name 
-        INTO product_name1 
-        FROM Product 
-        WHERE Product_id = product_record.product_id;
-        
-        -- Insert the product details into the TOP_SELLED table
-        INSERT INTO TOP_SELLED (product_id, product_name, selled_quantity)
-        VALUES (product_record.product_id, product_name1, product_order_count);
-    END LOOP;
-END;
-$$;
+
 -- TO GET TOP SELLED products
 CREATE TABLE TOP_SELLED (
 product_id INT,
@@ -175,22 +61,6 @@ Category_id SERIAL PRIMARY KEY,
 Category_name VARCHAR(50)
 );
 
-CREATE OR REPLACE FUNCTION update_status()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF NEW.stock = 0 THEN
-        UPDATE Product
-        SET status = 'out of stock'
-        WHERE Product_id = NEW.Product_id;
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER stock_update_trigger
-AFTER UPDATE OF stock ON Product
-FOR EACH ROW
-EXECUTE FUNCTION update_status();
 
 CREATE TABLE Product (
     Product_id SERIAL PRIMARY KEY,
@@ -300,3 +170,136 @@ CREATE TABLE Contains (
     review_time TIMESTAMP;
 );
 
+//set_product_status
+
+CREATE OR REPLACE FUNCTION set_product_status()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Set the status to 'available' after insert
+    NEW.status := 'available';
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER after_product_insert
+AFTER INSERT ON product
+FOR EACH ROW
+EXECUTE FUNCTION set_product_status();
+
+//insert_message_on_payment
+ CREATE OR REPLACE FUNCTION insert_message_on_payment()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.isPaid = true THEN
+        INSERT INTO Message (sender_id, receiver_id, message_time, message)
+        VALUES (
+            (SELECT user_id FROM Users WHERE user_type = 'Admin'),
+            NEW.customer_id,
+            CURRENT_TIMESTAMP,
+            'Thanks for buying our product. Please give a review or message us for return.'
+        );
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER on_payment_update
+AFTER UPDATE OF isPaid ON "Order"
+FOR EACH ROW
+EXECUTE FUNCTION insert_message_on_payment();
+CREATE OR REPLACE FUNCTION insert_message()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.delivery_status IS NULL THEN
+        INSERT INTO Message (sender_id, receiver_id, message_time, message)
+        VALUES ((SELECT user_id FROM Users WHERE user_type = 'Admin'), NEW.customer_id, NOW(), 'Your Products are waiting in the cart. Buy them before stock runs out');
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER insert_message_trigger
+AFTER INSERT ON "Order"
+FOR EACH ROW
+EXECUTE FUNCTION insert_message();
+CREATE OR REPLACE PROCEDURE insert_message_procedure(customer_id_param UUID)
+LANGUAGE SQL
+AS $$
+INSERT INTO Message (sender_id, receiver_id, message_time, message)
+SELECT
+    (SELECT user_id FROM Users WHERE user_type = 'Admin'),
+    customer_id_param,
+    NOW(),
+    'Your Products order is sent to the Seller. Waiting for the drop-off'
+FROM
+    "Order"
+WHERE
+    delivery_status = 'seller unconfirmed';
+$$;
+
+CREATE OR REPLACE FUNCTION before_insert_location_full()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Check if the new pst_code exists in the location table
+    IF NOT EXISTS (SELECT 1 FROM location WHERE pst_code = NEW.pst_code) THEN
+        -- Insert the new pst_code into the location table
+        INSERT INTO location (pst_code) VALUES (NEW.pst_code);
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_before_insert_location_full
+BEFORE INSERT ON location_full
+FOR EACH ROW
+EXECUTE FUNCTION before_insert_location_full();
+---- -- THE PROCEDURE TO INSERT INTO TOP_SELLED 
+CREATE OR REPLACE PROCEDURE INSERT_INTO_TOP_SELLED()
+LANGUAGE plpgsql
+AS $$
+DECLARE 
+    product_order_count INT;
+    product_name1 VARCHAR(255);
+    product_record RECORD;
+BEGIN
+    -- Clear existing data from the TOP_SELLED table
+    DELETE FROM TOP_SELLED;  
+    
+    -- Loop through each product in the "Contains" table
+    FOR product_record IN SELECT * FROM "Contains" LOOP
+        -- Calculate total quantity of orders for the current product
+        SELECT COALESCE(SUM(quantity), 0)
+        INTO product_order_count
+        FROM "Contains"
+        WHERE product_id = product_record.product_id;
+        
+        -- Retrieve the product name corresponding to the current product_id
+        SELECT Product_name 
+        INTO product_name1 
+        FROM Product 
+        WHERE Product_id = product_record.product_id;
+        
+        -- Insert the product details into the TOP_SELLED table
+        INSERT INTO TOP_SELLED (product_id, product_name, selled_quantity)
+        VALUES (product_record.product_id, product_name1, product_order_count);
+    END LOOP;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION update_status()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.stock = 0 THEN
+        UPDATE Product
+        SET status = 'out of stock'
+        WHERE Product_id = NEW.Product_id;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER stock_update_trigger
+AFTER UPDATE OF stock ON Product
+FOR EACH ROW
+EXECUTE FUNCTION update_status();

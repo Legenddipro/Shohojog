@@ -1567,3 +1567,7 @@ FROM Product
 WHERE product_id BETWEEN 34 AND 70
 LIMIT 2;
 
+SELECT p.*
+      FROM product p
+      INNER JOIN Contains c ON p.product_id = c.product_id
+      WHERE c.order_id = 19;
