@@ -21,6 +21,7 @@ app.use("/courier",require("./routes/courier_router"));
 app.use("/search_product",require("./routes/search_product"));
 app.use("/message",require("./routes/message_router"));
 app.use("/customer_care",require("./routes/customer_care_router"));
+app.use("/search_product_with_order",require("./routes/search_product_with_order"));
 //app.use("/order",require("./routes/order"));
 const port = process.env.PORT || 5000;
 app.listen(port, ()=>{

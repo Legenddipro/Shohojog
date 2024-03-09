@@ -52,3 +52,11 @@
 .profile-info p {
   margin: 5px 0;
 }
+
+/* Style for the search criteria */
+.search-criteria {
+  background-color: #f4f4f4;
+  border-radius: 5px;
+  padding: 20px;
+  margin-top: 20px; /* Adjust the margin to create space between profile info and search criteria */
+}
