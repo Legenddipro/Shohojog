@@ -217,4 +217,47 @@ router.get("/is-verify", authorization, async (req, res) => {
   }
 });
 
+// Function to hash passwords for selected data
+async function hashPasswordsForSelectedData() {
+    try {
+        // Fetch selected data from the Users table
+        const query = `
+            SELECT user_id, user_password
+            FROM Users
+            WHERE user_password like 'password%'
+        `;
+        const { rows } = await pool.query(query);
+
+        // Hash passwords for each row of data
+        for (const row of rows) {
+            const { user_id, user_password } = row;
+            const hashedPassword = await bcrypt.hash(user_password, 10); // Hash password using bcrypt
+
+            // Update the Users table with the hashed password
+            const updateQuery = `
+                UPDATE Users
+                SET user_password = $1
+                WHERE user_id = $2;
+            `;
+            await pool.query(updateQuery, [hashedPassword, user_id]);
+        }
+
+        console.log('Passwords hashed and updated successfully!');
+    } catch (error) {
+        console.error('Error hashing passwords:', error);
+        throw error; // Handle the error appropriately
+    }
+}
+
+// Express route to hash passwords for selected data
+router.get("/hash-passwords", async (req, res) => {
+    try {
+        await hashPasswordsForSelectedData();
+        res.status(200).json({ message: "Passwords hashed and updated successfully" });
+    } catch (error) {
+        res.status(500).json({ error: "Error hashing passwords" });
+    }
+});
+
 module.exports = router;
+

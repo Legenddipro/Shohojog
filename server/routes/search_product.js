@@ -2,36 +2,37 @@ const express = require('express');
 const pool = require("../database/db");
 const search_product = express.Router();
 
-// Search products
+//search products
 search_product.get('/', async (req, res) => {
   try {
-    // Retrieve search parameters from query string
-    const { productName, productCategory, minPrice, maxPrice, minRating, maxRating } = req.query;
+    const { productName, productCategory, minPrice, maxPrice, minRate, maxRate, orderId } = req.query;
 
-    // Define base query
-    let query = 'SELECT * FROM product WHERE 1=1';
+    let query = 'SELECT p.* FROM product p';
+    query += ' INNER JOIN contains c ON p.product_id = c.product_id';
+    query += ' WHERE 1=1';
 
-    // Append conditions based on search parameters
     if (productName) {
-      query += ` AND product_name ILIKE '%${productName}%'`;
+      query += ` AND p.product_name ILIKE '%${productName}%'`;
     }
     if (productCategory) {
-      query += ` AND product_category ILIKE '%${productCategory}%'`;
+      query += ` AND p.product_category ILIKE '%${productCategory}%'`;
     }
     if (minPrice) {
-      query += ` AND price >= ${minPrice}`;
+      query += ` AND p.price >= ${minPrice}`;
     }
     if (maxPrice) {
-      query += ` AND price <= ${maxPrice}`;
+      query += ` AND p.price <= ${maxPrice}`;
     }
-    if (minRating) {
-      query += ` AND product_id IN (SELECT product_id FROM review WHERE rating >= ${minRating})`;
+    if (minRate) {
+      query += ` AND p.overall_rating >= ${minRate}`;
     }
-    if (maxRating) {
-      query += ` AND product_id IN (SELECT product_id FROM review WHERE rating <= ${maxRating})`;
+    if (maxRate) {
+      query += ` AND p.overall_rating <= ${maxRate}`;
+    }
+    if (orderId) {
+      query += ` AND c.order_id = ${orderId}`;
     }
 
-    // Execute query
     const results = await pool.query(query);
     res.json(results.rows);
   } catch (err) {

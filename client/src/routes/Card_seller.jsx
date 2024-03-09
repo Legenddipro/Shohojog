@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 
-const Card_seller = ({ productName, price, category, stock, productId, status, delete_status }) => {
+const Card_seller = ({ productName, price, category, stock, overallRating, productId, status, delete_status }) => {
   const navigate = useNavigate();
 
   const handleRestock = () => {
@@ -49,8 +49,11 @@ const Card_seller = ({ productName, price, category, stock, productId, status, d
         {/* Product Category */}
         <p className="card__description"><strong>Category: </strong>{category}</p>
 
-        {/* Product Status */}
+        {/* Product Stock */}
         <p className="card__description"><strong>Stock: </strong>{stock}</p>
+
+        {/* Overall Rating */}
+        <p className="card__description"><strong>Overall Rating: </strong>{overallRating}</p>
       </div>
 
       {/* Button Container */}
@@ -82,6 +85,7 @@ Card_seller.propTypes = {
   price: PropTypes.number.isRequired,
   category: PropTypes.string.isRequired,
   stock: PropTypes.number.isRequired,
+  overallRating: PropTypes.number.isRequired,
   status: PropTypes.string.isRequired,
   delete_status: PropTypes.string.isRequired,
 };

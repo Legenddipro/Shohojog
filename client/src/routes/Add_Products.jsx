@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom'; 
 import "./Add_Products.css";
 
 const Add_Products = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate(); 
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
@@ -13,16 +13,15 @@ const Add_Products = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Get seller ID from local storage
     const sellerId = localStorage.getItem('userId');
 
     const newProduct = {
       product_name: productName,
-      price: parseFloat(price), // Parse price to float
+      price: parseFloat(price), 
       product_category: category,
       product_features: features,
       seller_id: sellerId,
-      stock: parseInt(stock) // Parse stock to integer
+      stock: parseInt(stock) 
     };
 
     try {
@@ -35,12 +34,12 @@ const Add_Products = () => {
       });
 
       const data = await response.json();
-      console.log(data); // Log response from backend
-      // Redirect to seller-products page upon successful submission
+      console.log(data); 
+      
       navigate('/seller-products');
     } catch (error) {
       console.error('Error:', error);
-      // Optionally, handle error message
+      
     }
   };
 

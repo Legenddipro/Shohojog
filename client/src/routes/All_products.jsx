@@ -21,7 +21,7 @@ const All_products = () => {
     getAllProducts();
   }, []);
 
-  console.log(products); // This will log the products array to the console
+  console.log(products); 
 
   return (
     <Fragment>
