@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "./Courier_Delivery_History.css"; // Import CSS file
+import "./Courier_Delivery_History.css"; 
 
 const Courier_Delivery_History = () => {
   const [history, setHistory] = useState([]);
@@ -48,7 +48,7 @@ const Courier_Delivery_History = () => {
               <th>Order ID</th>
               <th>Payment Date</th>
               <th>Status</th>
-              <th>Total Payment</th> {/* Add heading for Total Payment */}
+              <th>Total Payment</th> 
             </tr>
           </thead>
           <tbody>

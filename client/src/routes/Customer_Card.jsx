@@ -1,12 +1,12 @@
 // Frontend
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom"; // Import Link component
-import "./Customer_Card.css"; // Import CSS file
+import { Link } from "react-router-dom"; 
+import "./Customer_Card.css"; 
 
 const Customer_Card = ({ productId, productName, price, category, stock }) => {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const [quantity, setQuantity] = useState(null); // Initialize quantity with null
+  const [quantity, setQuantity] = useState(null); 
 
   useEffect(() => {
     fetchQuantity();
@@ -27,7 +27,6 @@ const Customer_Card = ({ productId, productName, price, category, stock }) => {
       );
       const data = await response.json();
       console.log(data); // Log the response from the server
-      // Update the quantity state with the fetched value
       setQuantity(data.quantity);
     } catch (error) {
       console.error("Error:", error);

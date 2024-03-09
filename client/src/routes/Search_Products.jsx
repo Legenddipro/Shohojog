@@ -13,8 +13,6 @@ const SearchProducts = () => {
   const [minRate, setMinRating] = useState("");
   const [maxRate, setMaxRating] = useState("");
   const [showRatingRange, setShowRatingRange] = useState(false);
-  const [orderId, setOrderId] = useState("");
-  const [showOrderId, setShowOrderId] = useState(false);
 
 
   useEffect(() => {
@@ -37,7 +35,7 @@ const SearchProducts = () => {
   const handleSearch = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/search_product?productName=${productName}&productCategory=${productCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&minRate=${minRate}&maxRate=${maxRate}&orderId=${orderId}`
+        `http://localhost:5000/search_product?productName=${productName}&productCategory=${productCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&minRate=${minRate}&maxRate=${maxRate}`
       ); // Include orderId in the search query
       const jsonData = await response.json();
       setProducts(jsonData);
@@ -154,25 +152,6 @@ const SearchProducts = () => {
           </Fragment>
         )}
       </div>
-      {/* Toggle button for Order ID search */}
-      <button
-        onClick={() => setShowOrderId(!showOrderId)}
-        className="toggle-order-id-button"
-      >
-        {showOrderId ? "Hide Order ID Search" : "Search by Order ID"}
-      </button>
-      {/* Input field for Order ID */}
-      {showOrderId && (
-        <div className="order-id-filter">
-          <input
-            type="text"
-            placeholder="Order ID"
-            value={orderId}
-            onChange={(e) => setOrderId(e.target.value)}
-            className="order-id-input"
-          />
-        </div>
-      )}
 
       <div className="products-container">
         {products.map((product) => (

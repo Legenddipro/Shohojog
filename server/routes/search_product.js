@@ -5,11 +5,9 @@ const search_product = express.Router();
 //search products
 search_product.get('/', async (req, res) => {
   try {
-    const { productName, productCategory, minPrice, maxPrice, minRate, maxRate, orderId } = req.query;
+    const { productName, productCategory, minPrice, maxPrice, minRate, maxRate } = req.query;
 
-    let query = 'SELECT p.* FROM product p';
-    query += ' INNER JOIN contains c ON p.product_id = c.product_id';
-    query += ' WHERE 1=1';
+    let query = 'SELECT p.* FROM product p where 1=1';
 
     if (productName) {
       query += ` AND p.product_name ILIKE '%${productName}%'`;
@@ -29,9 +27,7 @@ search_product.get('/', async (req, res) => {
     if (maxRate) {
       query += ` AND p.overall_rating <= ${maxRate}`;
     }
-    if (orderId) {
-      query += ` AND c.order_id = ${orderId}`;
-    }
+    
 
     const results = await pool.query(query);
     res.json(results.rows);

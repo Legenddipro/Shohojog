@@ -73,7 +73,7 @@ INSERT INTO Product_category (Category_name) VALUES
 ('Stationary');
 UPDATE product_category SET category_name ='Food' WHERE category_id = 5;
 UPDATE product_category SET category_name ='Stationery' WHERE category_id = 6;
--- The categories are Electronics , Beauty, Food ,Stationary, Medicine.......................................
+-- The categories are Electronics , Beauty, Food ,Stationery, Medicine.......................................
 
 
 INSERT INTO Product (Product_name, Price, Product_category, Product_features, Seller_id, Category_id, Stock, status)
@@ -126,7 +126,9 @@ VALUES
 ('Highlighters', 3.49, 'Stationery', 'Fluorescent highlighters, assorted colors', (SELECT user_id FROM Users WHERE First_Name = 'Emma'), (SELECT Category_id FROM product_category WHERE Category_name = 'Stationery'), 130, 'available'),
 ('Binder Clips', 2.50, 'Stationery', 'Metal binder clips, assorted sizes', (SELECT user_id FROM Users WHERE First_Name = 'Emma'), (SELECT Category_id FROM product_category WHERE Category_name = 'Stationery'), 200, 'available');
 
- 
+ ALTER TABLE Product
+ADD COLUMN  overall_rating DECIMAL(10, 2);
+UPDATE Product SET overall_rating = 5 ;
  
 ---- insert into order 
 -- Insert data into the Order table
@@ -170,11 +172,33 @@ VALUES
 ('2024-03-09', true, false, NULL, NULL, (SELECT user_id FROM Users WHERE First_Name = 'Sophia'), 'seller unconfirmed', NULL, NULL, NULL),
 -- Order 10
 ('2024-03-10', true, true, '2024-03-10', '2024-03-10 15:00:00', (SELECT user_id FROM Users WHERE First_Name = 'Olivia'), 'Courier confirmed', '2024-03-10', '2024-03-10',
-    
     (SELECT service_id FROM Courier_Service 
     JOIN Employee ON Courier_Service.service_id = Employee.employee_id 
     JOIN Users ON Employee.employee_id = Users.user_id 
     WHERE Users.First_Name = 'Sophia'));
+		
+		
+-- order table insertion for 2023 ....................................
+ALTER TABLE "Order"
+ADD COLUMN  Rated BOOLEAN;
+UPDATE "Order" SET Rated = 'true' ;
+INSERT INTO "Order" (order_date, isConfirm, isPaid, payment_date, delivery_time, customer_id, delivery_status, delivery_date, pickup_date, courier_employee_id, Rated)
+VALUES 
+    ('2023-01-01', true, true, '2023-01-01', '2023-01-01 12:00:00', (SELECT user_id FROM Users WHERE First_Name = 'Sarah'LIMIT 1), 'Courier confirmed', '2023-01-01', '2023-01-01', (SELECT es.employee_id FROM Employee es INNER JOIN Courier_Service cs ON es.employee_id = cs.service_id INNER JOIN Users u ON es.employee_id = u.user_id WHERE u.First_Name = 'William'LIMIT 1), true),
+    ('2023-01-02', true, true, '2023-01-02', '2023-01-02 12:00:00', (SELECT user_id FROM Users WHERE First_Name = 'David'LIMIT 1), 'Courier confirmed', '2023-01-02', '2023-01-02', (SELECT es.employee_id FROM Employee es INNER JOIN Courier_Service cs ON es.employee_id = cs.service_id INNER JOIN Users u ON es.employee_id = u.user_id WHERE u.First_Name = 'William'LIMIT 1), true),
+    ('2023-01-03', true, true, '2023-01-03', '2023-01-03 12:00:00', (SELECT user_id FROM Users WHERE First_Name = 'Olivia'LIMIT 1), 'Courier confirmed', '2023-01-03', '2023-01-03', (SELECT es.employee_id FROM Employee es INNER JOIN Courier_Service cs ON es.employee_id = cs.service_id INNER JOIN Users u ON es.employee_id = u.user_id WHERE u.First_Name = 'William'LIMIT 1), true),
+    ('2023-01-04', true, true, '2023-01-04', '2023-01-04 12:00:00', (SELECT user_id FROM Users WHERE First_Name = 'James'LIMIT 1), 'Courier confirmed', '2023-01-04', '2023-01-04', (SELECT es.employee_id FROM Employee es INNER JOIN Courier_Service cs ON es.employee_id = cs.service_id INNER JOIN Users u ON es.employee_id = u.user_id WHERE u.First_Name = 'William' LIMIT 1), true),
+    ('2023-01-05', true, true, '2023-01-05', '2023-01-05 12:00:00', (SELECT user_id FROM Users WHERE First_Name = 'Sophia' LIMIT 1), 'Courier confirmed', '2023-01-05', '2023-01-05', (SELECT es.employee_id FROM Employee es INNER JOIN Courier_Service cs ON es.employee_id = cs.service_id INNER JOIN Users u ON es.employee_id = u.user_id WHERE u.First_Name = 'William' LIMIT 1), true);
+
+
+-- data for 2022
+INSERT INTO "Order" (order_date, isConfirm, isPaid, payment_date, delivery_time, customer_id, delivery_status, delivery_date, pickup_date, courier_employee_id, Rated)
+VALUES 
+    ('2022-01-01', true, true, '2022-01-01', '2022-01-01 12:00:00', (SELECT user_id FROM Users WHERE First_Name = 'Sarah' LIMIT 1), 'Courier confirmed', '2022-01-01', '2022-01-01', (SELECT es.employee_id FROM Employee es INNER JOIN Courier_Service cs ON es.employee_id = cs.service_id INNER JOIN Users u ON es.employee_id = u.user_id WHERE u.First_Name = 'William' LIMIT 1), true),
+    ('2022-02-01', true, true, '2022-02-01', '2022-02-01 12:00:00', (SELECT user_id FROM Users WHERE First_Name = 'David'), 'Courier confirmed', '2022-02-01', '2022-02-01', (SELECT es.employee_id FROM Employee es INNER JOIN Courier_Service cs ON es.employee_id = cs.service_id INNER JOIN Users u ON es.employee_id = u.user_id WHERE u.First_Name = 'William'), true),
+    ('2022-03-01', true, true, '2022-03-01', '2022-03-01 12:00:00', (SELECT user_id FROM Users WHERE First_Name = 'Olivia' LIMIT 1), 'Courier confirmed', '2022-03-01', '2022-03-01', (SELECT es.employee_id FROM Employee es INNER JOIN Courier_Service cs ON es.employee_id = cs.service_id INNER JOIN Users u ON es.employee_id = u.user_id WHERE u.First_Name = 'William' LIMIT 1), true),
+    ('2022-04-01', true, true, '2022-04-01', '2022-04-01 12:00:00', (SELECT user_id FROM Users WHERE First_Name = 'James'LIMIT 1), 'Courier confirmed', '2022-04-01', '2022-04-01', (SELECT es.employee_id FROM Employee es INNER JOIN Courier_Service cs ON es.employee_id = cs.service_id INNER JOIN Users u ON es.employee_id = u.user_id WHERE u.First_Name = 'William'LIMIT 1), true),
+    ('2022-05-01', true, true, '2022-05-01', '2022-05-01 12:00:00', (SELECT user_id FROM Users WHERE First_Name = 'Sophia'LIMIT 1), 'Courier confirmed', '2022-05-01', '2022-05-01', (SELECT es.employee_id FROM Employee es INNER JOIN Courier_Service cs ON es.employee_id = cs.service_id INNER JOIN Users u ON es.employee_id = u.user_id WHERE u.First_Name = 'William'LIMIT 1), true);
 
 		
 		DELETE FROM product;
@@ -256,4 +280,117 @@ RANDOM() * 5,
 FROM Product
 WHERE product_id BETWEEN 34 AND 70
 LIMIT 5;
+
+-- conatins for 2023................................
+-- Inserting data for order_id = 25
+INSERT INTO "Contains" (order_id, product_id, quantity, price, review, rating, review_time)
+SELECT 25, product_id, FLOOR(RANDOM() * 10) + 1, (RANDOM() * 50 + 10)::numeric(10,2),
+CASE WHEN RANDOM() < 0.5 THEN 'Good purchase!' ELSE 'Item arrived damaged.' END AS review,
+RANDOM() * 5,
+'2023-07-01'::timestamp + INTERVAL '1 month' * FLOOR(RANDOM() * 5)
+FROM Product
+WHERE product_id BETWEEN 34 AND 70
+LIMIT 2;
+
+-- Inserting data for order_id = 26
+INSERT INTO "Contains" (order_id, product_id, quantity, price, review, rating, review_time)
+SELECT 26, product_id, FLOOR(RANDOM() * 10) + 1, (RANDOM() * 50 + 10)::numeric(10,2),
+CASE WHEN RANDOM() < 0.5 THEN 'Great product!' ELSE 'Not satisfied with the quality.' END AS review,
+RANDOM() * 5,
+'2023-07-01'::timestamp + INTERVAL '1 month' * FLOOR(RANDOM() * 5)
+FROM Product
+WHERE product_id BETWEEN 34 AND 70
+LIMIT 2;
+
+-- Inserting data for order_id = 27
+INSERT INTO "Contains" (order_id, product_id, quantity, price, review, rating, review_time)
+SELECT 27, product_id, FLOOR(RANDOM() * 10) + 1, (RANDOM() * 50 + 10)::numeric(10,2),
+CASE WHEN RANDOM() < 0.5 THEN 'Excellent service!' ELSE 'Shipping was delayed.' END AS review,
+RANDOM() * 5,
+'2023-07-01'::timestamp + INTERVAL '1 month' * FLOOR(RANDOM() * 5)
+FROM Product
+WHERE product_id BETWEEN 34 AND 70
+LIMIT 2;
+
+-- Inserting data for order_id = 28
+INSERT INTO "Contains" (order_id, product_id, quantity, price, review, rating, review_time)
+SELECT 28, product_id, FLOOR(RANDOM() * 10) + 1, (RANDOM() * 50 + 10)::numeric(10,2),
+CASE WHEN RANDOM() < 0.5 THEN 'Product as described!' ELSE 'Received wrong item.' END AS review,
+RANDOM() * 5,
+'2023-07-01'::timestamp + INTERVAL '1 month' * FLOOR(RANDOM() * 5)
+FROM Product
+WHERE product_id BETWEEN 34 AND 70
+LIMIT 2;
+
+-- Inserting data for order_id = 29
+INSERT INTO "Contains" (order_id, product_id, quantity, price, review, rating, review_time)
+SELECT 29, product_id, FLOOR(RANDOM() * 10) + 1, (RANDOM() * 50 + 10)::numeric(10,2),
+CASE WHEN RANDOM() < 0.5 THEN 'Satisfactory!' ELSE 'Not what I expected.' END AS review,
+RANDOM() * 5,
+'2023-07-01'::timestamp + INTERVAL '1 month' * FLOOR(RANDOM() * 5)
+FROM Product
+WHERE product_id BETWEEN 34 AND 70
+LIMIT 2;
+
+-- Inserting data for order_id = 30
+INSERT INTO "Contains" (order_id, product_id, quantity, price, review, rating, review_time)
+SELECT 30, product_id, FLOOR(RANDOM() * 10) + 1, (RANDOM() * 50 + 10)::numeric(10,2),
+CASE WHEN RANDOM() < 0.5 THEN 'Could be better!' ELSE 'Not worth the price.' END AS review,
+RANDOM() * 5,
+'2023-07-01'::timestamp + INTERVAL '1 month' * FLOOR(RANDOM() * 5)
+FROM Product
+WHERE product_id BETWEEN 34 AND 70
+LIMIT 2;
+
+--- contains for order date 2022.........................................
+
+-- Inserting data for order_id = 31
+INSERT INTO "Contains" (order_id, product_id, quantity, price, review, rating, review_time)
+SELECT 31, product_id, FLOOR(RANDOM() * 10) + 1, (RANDOM() * 50 + 10)::numeric(10,2),
+CASE WHEN RANDOM() < 0.5 THEN 'Great product!' ELSE 'Not satisfied with the quality.' END AS review,
+RANDOM() * 5,
+'2022-07-01'::timestamp + INTERVAL '1 day' * FLOOR(RANDOM() * 31)
+FROM Product
+WHERE product_id BETWEEN 34 AND 70
+LIMIT 2;
+
+-- Inserting data for order_id = 32
+INSERT INTO "Contains" (order_id, product_id, quantity, price, review, rating, review_time)
+SELECT 32, product_id, FLOOR(RANDOM() * 10) + 1, (RANDOM() * 50 + 10)::numeric(10,2),
+CASE WHEN RANDOM() < 0.5 THEN 'Good purchase!' ELSE 'Item arrived damaged.' END AS review,
+RANDOM() * 5,
+'2022-07-01'::timestamp + INTERVAL '1 day' * FLOOR(RANDOM() * 31)
+FROM Product
+WHERE product_id BETWEEN 34 AND 70
+LIMIT 2;
+
+-- Inserting data for order_id = 33
+INSERT INTO "Contains" (order_id, product_id, quantity, price, review, rating, review_time)
+SELECT 33, product_id, FLOOR(RANDOM() * 10) + 1, (RANDOM() * 50 + 10)::numeric(10,2),
+CASE WHEN RANDOM() < 0.5 THEN 'Highly recommended!' ELSE 'Did not meet expectations.' END AS review,
+RANDOM() * 5,
+'2022-07-01'::timestamp + INTERVAL '1 day' * FLOOR(RANDOM() * 31)
+FROM Product
+WHERE product_id BETWEEN 34 AND 70
+LIMIT 2;
+
+-- Inserting data for order_id = 34
+INSERT INTO "Contains" (order_id, product_id, quantity, price, review, rating, review_time)
+SELECT 34, product_id, FLOOR(RANDOM() * 10) + 1, (RANDOM() * 50 + 10)::numeric(10,2),
+CASE WHEN RANDOM() < 0.5 THEN 'Excellent service!' ELSE 'Shipping was delayed.' END AS review,
+RANDOM() * 5,
+'2022-07-01'::timestamp + INTERVAL '1 day' * FLOOR(RANDOM() * 31)
+FROM Product
+WHERE product_id BETWEEN 34 AND 70
+LIMIT 2;
+
+-- Inserting data for order_id = 35
+INSERT INTO "Contains" (order_id, product_id, quantity, price, review, rating, review_time)
+SELECT 35, product_id, FLOOR(RANDOM() * 10) + 1, (RANDOM() * 50 + 10)::numeric(10,2),
+CASE WHEN RANDOM() < 0.5 THEN 'Product as described!' ELSE 'Received wrong item.' END AS review,
+RANDOM() * 5,
+'2022-07-01'::timestamp + INTERVAL '1 day' * FLOOR(RANDOM() * 31)
+FROM Product
+WHERE product_id BETWEEN 34 AND 70
+LIMIT 2;
 
