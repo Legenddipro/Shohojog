@@ -8,14 +8,24 @@ const Customercare_Stats = () => {
   const [showTopSoldProducts, setShowTopSoldProducts] = useState(false);
   const [customerHistory, setCustomerHistory] = useState([]);
   const [showCustomerHistory, setShowCustomerHistory] = useState(false);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [topSoldProductsBetweenDates, setTopSoldProductsBetweenDates] = useState([]);
-  const [showTopSoldProductsBetweenDates, setShowTopSoldProductsBetweenDates] = useState(false);
-  const [startDate_seller, setStartDate_seller] = useState('');
-  const [endDate_seller, setEndDate_seller] = useState('');
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [topSoldProductsBetweenDates, setTopSoldProductsBetweenDates] =
+    useState([]);
+  const [showTopSoldProductsBetweenDates, setShowTopSoldProductsBetweenDates] =
+    useState(false);
+  const [startDate_seller, setStartDate_seller] = useState("");
+  const [endDate_seller, setEndDate_seller] = useState("");
   const [topSellerBetweenDates, setTopSellerBetweenDates] = useState([]);
-  const [showTopSellerBetweenDates, setShowTopSellerBetweenDates] = useState(false);
+  const [showTopSellerBetweenDates, setShowTopSellerBetweenDates] =
+    useState(false);
+  const [topRatedProducts, setTopRatedProducts] = useState([]);
+  const [showTopRatedProducts, setShowTopRatedProducts] = useState(false);
+  const [topOrdersWithMostProducts, setTopOrdersWithMostProducts] = useState(
+    []
+  );
+  const [showTopOrdersWithMostProducts, setShowTopOrdersWithMostProducts] =
+    useState(false);
 
   useEffect(() => {
     fetchTopSoldProducts();
@@ -30,6 +40,30 @@ const Customercare_Stats = () => {
       setShowTopSoldProducts(!showTopSoldProducts);
     } catch (error) {
       console.error("Error fetching top sold products:", error);
+    }
+  };
+  const fetchTopRatedProducts = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/customer_care/top_rated_products"
+      );
+      setTopRatedProducts(response.data);
+      console.log(response.data);
+      setShowTopRatedProducts(!showTopRatedProducts); // Show the top rated products section
+    } catch (error) {
+      console.error("Error fetching top rated products:", error);
+    }
+  };
+
+  const fetchTopOrdersWithMostProducts = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/customer_care/top_orders_with_most_products"
+      );
+      setTopOrdersWithMostProducts(response.data);
+      setShowTopOrdersWithMostProducts(!showTopOrdersWithMostProducts); // Show the top orders with most products section
+    } catch (error) {
+      console.error("Error fetching top orders with most products:", error);
     }
   };
 
@@ -81,9 +115,7 @@ const Customercare_Stats = () => {
             : "Show Top Sold Products"}
         </button>
         <button className="nav-button" onClick={fetchCustomerHistory}>
-          {showCustomerHistory
-            ? "Hide Top Customer"
-            : "See Top Customer"}
+          {showCustomerHistory ? "Hide Top Customer" : "See Top Customer"}
         </button>
         <input
           type="date"
@@ -96,11 +128,9 @@ const Customercare_Stats = () => {
           onChange={(e) => setEndDate(e.target.value)}
         />
         <button className="nav-button" onClick={fetchTopSoldBetweenDates}>
-        {showTopSoldProductsBetweenDates
-            ? "Hide Products"
-            : "Show Products"}
+          {showTopSoldProductsBetweenDates ? "Hide Products" : "Show Products"}
         </button>
-        
+
         <input
           type="date"
           value={startDate_seller}
@@ -112,9 +142,17 @@ const Customercare_Stats = () => {
           onChange={(e) => setEndDate_seller(e.target.value)}
         />
         <button className="nav-button" onClick={fetchTopSellerBetweenDates}>
-        {showTopSellerBetweenDates
-            ? "Hide Seller"
-            : "Show Seller"}
+          {showTopSellerBetweenDates ? "Hide Seller" : "Show Seller"}
+        </button>
+        <button className="nav-button" onClick={fetchTopRatedProducts}>
+          {showTopRatedProducts
+            ? "Hide Top Rated Products"
+            : "Show Top Rated Products"}
+        </button>
+        <button className="nav-button" onClick={fetchTopOrdersWithMostProducts}>
+          {showTopOrdersWithMostProducts
+            ? "Hide Top Orders"
+            : "Show Top Orders"}
         </button>
       </div>
 
@@ -224,7 +262,51 @@ const Customercare_Stats = () => {
           </div>
         )}
 
-        {/* Add Bar Graph here if desired */}
+        {showTopRatedProducts && (
+          <div className="top-rated-products-section">
+            <h2>Top Rated Products</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Product ID</th>
+                  <th>Product Name</th>
+                  <th>Overall Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                {topRatedProducts.map((product) => (
+                  <tr key={product.product_id}>
+                    <td>{product.product_id}</td>
+                    <td>{product.product_name}</td>
+                    <td>{product.overall_rating}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {showTopOrdersWithMostProducts && (
+          <div className="top-orders-section">
+            <h2>Top Orders with Most Products</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Total Products</th>
+                </tr>
+              </thead>
+              <tbody>
+                {topOrdersWithMostProducts.map((order) => (
+                  <tr key={order.order_id}>
+                    <td>{order.order_id}</td>
+                    <td>{order.total_products}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -9,6 +9,10 @@ const SearchProducts = () => {
   const [productCategory, setProductCategory] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [showPriceRange, setShowPriceRange] = useState(false);
+  const [minRating, setMinRating] = useState("");
+  const [maxRating, setMaxRating] = useState("");
+  const [showRatingRange, setShowRatingRange] = useState(false);
 
   useEffect(() => {
     const id = localStorage.getItem('userId');
@@ -27,12 +31,20 @@ const SearchProducts = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/search_product?productName=${productName}&productCategory=${productCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}`);
+      const response = await fetch(`http://localhost:5000/search_product?productName=${productName}&productCategory=${productCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&minRating=${minRating}&maxRating=${maxRating}`);
       const jsonData = await response.json();
       setProducts(jsonData);
     } catch (err) {
       console.error(err.message);
     }
+  };
+
+  const togglePriceRange = () => {
+    setShowPriceRange(!showPriceRange);
+  };
+
+  const toggleRatingRange = () => {
+    setShowRatingRange(!showRatingRange);
   };
 
   return (
@@ -65,28 +77,65 @@ const SearchProducts = () => {
       </div>
 
       <div className="filters-container">
-        <div className="price-filter">
-          <input
-            type="number"
-            placeholder="Min price"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            className="price-input"
-          />
-          <span className="arrow-up"></span>
-          <span className="arrow-down"></span>
-        </div>
-        <div className="price-filter">
-          <input
-            type="number"
-            placeholder="Max price"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            className="price-input"
-          />
-          <span className="arrow-up"></span>
-          <span className="arrow-down"></span>
-        </div>
+        <button onClick={togglePriceRange} className="toggle-price-range-button">
+          {showPriceRange ? "Hide Price Range" : "Search by Price Range"}
+        </button>
+        {showPriceRange && (
+          <Fragment>
+            <div className="price-filter">
+              <input
+                type="number"
+                placeholder="Min price"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+                className="price-input"
+              />
+              <span className="arrow-up"></span>
+              <span className="arrow-down"></span>
+            </div>
+            <div className="price-filter">
+              <input
+                type="number"
+                placeholder="Max price"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                className="price-input"
+              />
+              <span className="arrow-up"></span>
+              <span className="arrow-down"></span>
+            </div>
+          </Fragment>
+        )}
+
+        <button onClick={toggleRatingRange} className="toggle-rating-range-button">
+          {showRatingRange ? "Hide Rating Range" : "Search by Rating Range"}
+        </button>
+        {showRatingRange && (
+          <Fragment>
+            <div className="rating-filter">
+              <input
+                type="number"
+                placeholder="Min rating"
+                value={minRating}
+                onChange={(e) => setMinRating(e.target.value)}
+                className="rating-input"
+              />
+              <span className="arrow-up"></span>
+              <span className="arrow-down"></span>
+            </div>
+            <div className="rating-filter">
+              <input
+                type="number"
+                placeholder="Max rating"
+                value={maxRating}
+                onChange={(e) => setMaxRating(e.target.value)}
+                className="rating-input"
+              />
+              <span className="arrow-up"></span>
+              <span className="arrow-down"></span>
+            </div>
+          </Fragment>
+        )}
       </div>
 
       <div className="products-container">

@@ -66,7 +66,7 @@ customer_care_router.post('/top_seller_btwn_dates', async (req, res) => {
   }
 });
 
-//Arian's code
+//Arian's code...............................................................................................................
 //Route to get all pending return orders
 customer_care_router.get("/pending_return_orders", async (req, res) => {
   try {
@@ -148,6 +148,50 @@ customer_care_router.post("/deny", async (req, res) => {
   } catch (error) {
     console.error("Error denying return order:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+customer_care_router.get("/top_orders_with_most_products", async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        o.order_id,
+        COUNT(c.product_id) AS total_products
+      FROM 
+        "Order" o
+      JOIN 
+        Contains c ON o.order_id = c.order_id
+      GROUP BY 
+        o.order_id
+      ORDER BY 
+        total_products DESC
+      LIMIT 5;
+    `;
+    const { rows } = await db.query(query);
+    res.json(rows);
+  } catch (error) {
+    console.error("Error fetching top orders with most products:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+customer_care_router.get("/top_rated_products", async (req, res) => {
+  try {
+    const query = `
+    SELECT 
+    product_id,
+    product_name,
+    COALESCE(overall_rating, 0) AS overall_rating
+FROM 
+    Product
+ORDER BY 
+    COALESCE(overall_rating, 0) DESC
+LIMIT 5;
+
+    `;
+    const { rows } = await db.query(query);
+    res.json(rows);
+  } catch (error) {
+    console.error("Error fetching top rated products:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

@@ -223,22 +223,6 @@ CREATE TABLE Message (
    CONSTRAINT MESSAGE_receiver FOREIGN KEY (receiver_id) REFERENCES Users(user_id)
 );
 
-CREATE TABLE Offer (
-    offer_id SERIAL PRIMARY KEY,
-    starting_date DATE,
-		ending_date DATE,
-    discount_rate DECIMAL(5, 2), -- Adjust precision and scale as needed
-    product_id INT,
-   CONSTRAINT product_offer_fk  FOREIGN KEY (product_id) REFERENCES Product(Product_id),
-	 CONSTRAINT NO_NEGATIVE_discount CHECK (discount_rate >= 0) 
-);
-CREATE TABLE Product_offer(
-product_id INT ,
-offer_id INT,
-CONSTRAINT FK_offer_and_product_offer FOREIGN KEY (offer_id) REFERENCES Offer(offer_id),
- CONSTRAINT FK_offer_product_and_PRODUCT FOREIGN KEY (product_id) REFERENCES Product(product_id),
-		CONSTRAINT PK_Product_offer PRIMARY KEY (offer_id, product_id)
-);
 CREATE TABLE Employee (
     employee_id uuid PRIMARY KEY,
     salary DECIMAL(10, 2),
@@ -316,33 +300,3 @@ CREATE TABLE Contains (
     review_time TIMESTAMP;
 );
 
-
-CREATE TABLE Review (
-customer_id uuid,
-    product_id SERIAL,
-  CONSTRAINT FK_Review_Customer FOREIGN KEY (customer_id) REFERENCES Customer(user_id),
- CONSTRAINT FK_Review_Product FOREIGN KEY    (product_id) REFERENCES Product(product_id),
-    CONSTRAINT PK_REVIEW PRIMARY KEY (customer_id,product_id),
-    comments TEXT,
-    comment_time TIMESTAMP,
-    rating DECIMAL(10, 2)
-);
-
--- add a CONSTRAINT named rating cannot be  no more than 10 ....................... by Prachu........................		 
- CREATE TABLE Review (
-    customer_id uuid,
-    product_id INT,
-    CONSTRAINT FK_Review_Customer FOREIGN KEY (customer_id) REFERENCES Customer(user_id),
-    CONSTRAINT FK_Review_Product FOREIGN KEY (product_id) REFERENCES Product(product_id),
-    CONSTRAINT PK_REVIEW PRIMARY KEY (customer_id, product_id),
-    comments TEXT,
-    comment_time TIMESTAMP,
-    rating DECIMAL(10, 2),
-    CONSTRAINT no_more_than_10 CHECK (rating <= 10)
-);
--- to add into review table ..........................................
-INSERT INTO Review (customer_id, product_id, comments, comment_time, rating)
-VALUES 
-('6487831e-30f4-44fc-8ac3-87919b1a10d3', 4, 'Great product!', CURRENT_TIMESTAMP, 9.5),
-('6487831e-30f4-44fc-8ac3-87919b1a10d3', 3, 'Good service!', CURRENT_TIMESTAMP, 8.7),
-('6487831e-30f4-44fc-8ac3-87919b1a10d3', 13, 'Average experience', CURRENT_TIMESTAMP, 5.2);

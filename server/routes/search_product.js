@@ -6,7 +6,7 @@ const search_product = express.Router();
 search_product.get('/', async (req, res) => {
   try {
     // Retrieve search parameters from query string
-    const { productName, productCategory, minPrice, maxPrice } = req.query;
+    const { productName, productCategory, minPrice, maxPrice, minRating, maxRating } = req.query;
 
     // Define base query
     let query = 'SELECT * FROM product WHERE 1=1';
@@ -23,6 +23,12 @@ search_product.get('/', async (req, res) => {
     }
     if (maxPrice) {
       query += ` AND price <= ${maxPrice}`;
+    }
+    if (minRating) {
+      query += ` AND product_id IN (SELECT product_id FROM review WHERE rating >= ${minRating})`;
+    }
+    if (maxRating) {
+      query += ` AND product_id IN (SELECT product_id FROM review WHERE rating <= ${maxRating})`;
     }
 
     // Execute query
