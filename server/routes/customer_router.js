@@ -382,7 +382,7 @@ customer_router.post("/confirm_order", async (req, res) => {
 // Route to fetch all messages for a specific receiver (customer)
 customer_router.get('/fetch_messages', async (req, res) => {
   try {
-      const { receiver_id } = req.query; // Get receiver ID from query parameters
+      const { receiver_id } = req.query; 
 
       // Query to fetch messages for the specified receiver with sender's username
       const query = `
@@ -390,7 +390,7 @@ customer_router.get('/fetch_messages', async (req, res) => {
           FROM Message m
           INNER JOIN Users u ON m.sender_id = u.user_id
           WHERE m.receiver_id = $1
-          ORDER BY m.message_time DESC`; // Assuming you want to order messages by time
+          ORDER BY m.message_time DESC`; 
 
       // Execute the query
       const { rows } = await pool.query(query, [receiver_id]);

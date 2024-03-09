@@ -23,8 +23,7 @@ const Card_seller = ({ productName, price, category, stock, overallRating, produ
   
       if (response.ok) {
         console.log('Product brought back successfully');
-        // You can update the UI to remove the product from the unavailable list
-        // For simplicity, you can reload the page to fetch the updated product list
+        
         window.location.reload();
       } else {
         throw new Error('Failed to bring back product');

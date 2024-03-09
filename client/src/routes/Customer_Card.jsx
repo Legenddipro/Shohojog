@@ -102,7 +102,6 @@ const Customer_Card = ({ productId, productName, price, category, stock }) => {
       );
       const data = await response.json();
       console.log(data); // Log the response from the server
-      // Optionally, you can show a message or update the UI after successful removal from cart
       setIsAddingToCart(false); // Reset isAddingToCart after successful removal from cart
       setQuantity(0); // Set quantity to 0 after removing from cart
     } catch (error) {

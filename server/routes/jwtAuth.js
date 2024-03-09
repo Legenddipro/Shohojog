@@ -205,7 +205,7 @@ router.post("/login", validInfo, async (req, res) => {
     return res.json({ jwtToken, userType, userId: user.rows[0].user_id });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ error: "Server Error" }); // Return JSON response with error message
+    res.status(500).json({ error: "Server Error" });
   }
 });
 
@@ -233,7 +233,7 @@ async function hashPasswordsForSelectedData() {
         // Hash passwords for each row of data
         for (const row of rows) {
             const { user_id, user_password } = row;
-            const hashedPassword = await bcrypt.hash(user_password, 10); // Hash password using bcrypt
+            const hashedPassword = await bcrypt.hash(user_password, 10); 
 
             // Update the Users table with the hashed password
             const updateQuery = `
@@ -247,7 +247,7 @@ async function hashPasswordsForSelectedData() {
         console.log('Passwords hashed and updated successfully!');
     } catch (error) {
         console.error('Error hashing passwords:', error);
-        throw error; // Handle the error appropriately
+        throw error; 
     }
 }
 

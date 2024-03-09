@@ -1,13 +1,13 @@
 //Arian
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
-import './Customer_Receipt.css'; // Import the CSS file
+import { useNavigate } from 'react-router-dom'; 
+import './Customer_Receipt.css'; 
 
 const Customer_Receipt = () => {
   const [receiptData, setReceiptData] = useState(null);
   const userId = localStorage.getItem('userId');
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate(); 
 
   const fetchReceipt = async () => {
     try {
@@ -40,9 +40,9 @@ const Customer_Receipt = () => {
     try {
       const response = await axios.post(`http://localhost:5000/customer/cancel_cart`, { user_id: userId });
       alert(response.data.message); // Show success message
-      // Reload the receipt data after cancelling the cart
+      
       fetchReceipt();
-      // Navigate back to Home_Customer
+      
       navigate('/Home_Customer');
     } catch (error) {
       console.error('Error cancelling cart:', error);
